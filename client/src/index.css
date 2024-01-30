@@ -5,9 +5,28 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-width: 100vw;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  grid-template-columns: repeat(2, auto);
+  border: 1px solid black;
+}
+
+.choice {
+  height: 100%;
+  width: 100%;
+  border: 1px solid red;
 }
