@@ -18,10 +18,17 @@ code {
     monospace;
 }
 
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 250px);
+  grid-template-rows: 280px auto;
+  border: 1px solid black;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(2, auto);
-  grid-template-columns: repeat(2, auto);
+  grid-template-rows: repeat(2, auto);
   border: 1px solid black;
 }
 
