@@ -6,6 +6,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  background-color: #3b006e;
+  background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,22 +20,36 @@ code {
     monospace;
 }
 
-.grid-container {
+.grid {
+  margin-top: 40px;
   display: grid;
   grid-template-columns: repeat(2, 250px);
-  grid-template-rows: 280px auto;
-  border: 1px solid black;
+  grid-template-rows: repeat(2, 50px);
+  gap: 10px;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, auto);
-  grid-template-rows: repeat(2, auto);
-  border: 1px solid black;
+iframe {
+  border: 5px dashed antiquewhite;
 }
 
 .choice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 100%;
   width: 100%;
-  border: 1px solid red;
+}
+
+button {
+  background-color: #7215c2;
+  color: antiquewhite;
+  font-size: 1rem;
+}
+
+.option-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80%;
+  width: 70%;
 }

@@ -12,7 +12,11 @@ function App() {
 
   return (
     <div>
-      <Video hidden={hidden} url="https://www.youtube.com/embed/kNyR46eHDxE" />
+      {hidden ? 
+        <Video hidden={hidden} url="https://www.youtube.com/embed/kNyR46eHDxE" /> : 
+        <img src="https://images.twinkl.co.uk/tw1n/image/private/t_630/u/ux/question-mark_ver_1.jpg"
+         height="250" width="250"></img>
+      }
       <Choices hideVideo={toggleVideo}/>
     </div>
   )
