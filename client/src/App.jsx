@@ -3,6 +3,7 @@ import HomeButton from "./HomeButton";
 import Video from "./Video";
 import Choices from "./Choices"
 import Button from '@mui/material/Button';
+import { Repeat } from '@mui/icons-material';
 
 function App() {
   const [hidden, setHidden] = useState(true);
@@ -33,8 +34,7 @@ function App() {
       <div>
         <HomeButton resetGame={resetGame}/>
         {hidden ? 
-          <img src="https://images.twinkl.co.uk/tw1n/image/private/t_630/u/ux/question-mark_ver_1.jpg"
-           height="280" width="500"></img> : 
+          <div class="empty-box"><h1>Guess the Song... <Repeat fontSize="large"/></h1></div> : 
           <Video hidden={hidden} url="https://www.youtube.com/embed/kNyR46eHDxE" />
         }
         <Choices hideVideo={toggleVideo}/>

@@ -28,6 +28,13 @@ code {
   gap: 10px;
 }
 
+.empty-box {
+  height: "280px";
+  width: "500px";
+  color: antiquewhite;
+  text-shadow: 4px 4px #000000;
+}
+
 iframe {
   border: 5px dashed antiquewhite;
 }
