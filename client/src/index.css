@@ -41,15 +41,27 @@ iframe {
 }
 
 button {
-  background-color: #7215c2;
-  color: antiquewhite;
-  font-size: 1rem;
-}
-
-.option-button {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #7215c2;
+  color: antiquewhite;
+  font-size: 1rem;
+  width: fit-content;
+  padding: 4px 40px;
+  border-radius: 20px;
+}
+
+.home-button {
+  height: 40px;
+  width: 40px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 20px;
+}
+
+.option-button {
   height: 80%;
   width: 70%;
 }

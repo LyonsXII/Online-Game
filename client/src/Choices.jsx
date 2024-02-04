@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 
 
 function Choices(props) {
-  // Need to pull these from the database
+  // Need to pull these from the  database
   const options = ["Death Note", "Fullmetal Alchemist", "Gurren Lagann", "Kiznaiver"];
 
   return (<div class="grid">
