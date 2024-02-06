@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from '@mui/material/Button';
 
 
@@ -6,9 +6,13 @@ function Choices(props) {
   // Need to pull these from the  database
   const options = ["Death Note", "Fullmetal Alchemist", "Gurren Lagann", "Kiznaiver"];
 
+  const [correct, setCorrect] = useState();
+
   return (<div class="grid">
             <div onClick={props.hideVideo} class="choice"><Button variant="contained" class="option-button">{options[0]}</Button></div>
-            <div class="choice"><Button variant="contained" class="option-button">{options[1]}</Button></div>
+            <div class="choice">
+              <Button style={{ backgroundColor: correct && "green" }} variant="contained" class="option-button">{options[1]}</Button>
+            </div>
             <div class="choice"><Button variant="contained" class="option-button">{options[2]}</Button></div>
             <div class="choice"><Button variant="contained" class="option-button">{options[3]}</Button></div>
           </div>)

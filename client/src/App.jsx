@@ -24,7 +24,7 @@ function App() {
 
   if (intro) {
     return (
-      <div>
+      <div class="flexbox">
         <HomeButton resetGame={resetGame}/>
         <Button onClick={startGame} variant="contained" class="option-button">Start</Button>
       </div>
@@ -34,7 +34,7 @@ function App() {
       <div>
         <HomeButton resetGame={resetGame}/>
         {hidden ? 
-          <div class="empty-box"><h1>Guess the Song... <Repeat fontSize="large"/></h1></div> : 
+          <div class="empty-box"><h1>Guess the Song... <Repeat fontSize="large" sx={{ textShadow: 5, marginLeft: 2 }} /></h1></div> : 
           <Video hidden={hidden} url="https://www.youtube.com/embed/kNyR46eHDxE" />
         }
         <Choices hideVideo={toggleVideo}/>
