@@ -8,40 +8,36 @@ import { Repeat } from '@mui/icons-material';
 function App() {
   const [hidden, setHidden] = useState(true);
   const [intro, setIntro] = useState(true);
-
-  function fetchQuestion() {
-    // Need to pull these from the  database
-    // 1 - Query number of ids in table
-    const numIDs = 20;
-    // 2 - Randomly select one entry to serve as the correct answer and three more to fill the other choices
-      let choices = [];
-      const correctAnswer = Math.floor(Math.random() * 4);
-      for (let i = 0; i < 4; i++) {
-        const randChoice = Math.floor(Math.random() * numIDs)
-        if (choices.includes(randChoice)) {i--; continue;}
-        if (i == correctAnswer) {choices.push({"name": randChoice, "correct": true});}
-        else {choices.push({"name": randChoice, "correct": false});}
-      }
-    // 3 - Use SQL queries to replace ID for each entry of choices with the name of the entry
-      for (let i = 0; i < 4; i++) {
-        choices[i] = "";
-      }
-    // 4 - Retrieve full set of details for the correct answer
-      const questionData = {};
-    // 5 - Shuffle choices using Fisher-Yates
-      function shuffle(array) {
-        var m = array.length, t, i;
-
-        while (m) {
-          i = Math.floor(Math.random() * m--);
-          t = array[m];
-          array[m] = array[i];
-          array[i] = t;
+  const [choices, setChoices] = useState([{}]);
+  const [answer, setAnswer] = useState({option1: null, option2: null, option3: null, option4: null});
+  
+  function fetchQuestion(difficulty, category) {
+    const API_URL = "/choices" + "?difficulty=" + difficulty + "&category=" + category;
+    useEffect(() => {
+      fetch(API_URL).then(
+        response => response.json()
+      ).then(
+        data => {
+          setChoices(data);
         }
+      )
+    }, []);
+    
+    // Shuffle choices using Fisher-Yates
+    function shuffle(array) {
+      var m = array.length, t, i;
 
-        return array;
+      while (m) {
+        i = Math.floor(Math.random() * m--);
+        t = array[m];
+        array[m] = array[i];
+        array[i] = t;
       }
-      choices = shuffle(choices);
+
+      return array;
+    }
+
+    setChoices(shuffle(choices));
   }
 
   function startGame() {
@@ -57,8 +53,12 @@ function App() {
     hidden ? setHidden(false) : setHidden(true);
   }
 
-  function handleCorrect() {
-    
+  function handleCorrect(correct) {
+    if (correct) {
+      return { backgroundColor: correct }
+    } else {
+      return { backgroundColor: correct }
+    }
   }
 
   if (intro) {
@@ -77,7 +77,7 @@ function App() {
           <Video hidden={hidden} url="https://www.youtube.com/embed/kNyR46eHDxE" />
         }
         {choices.map((choice, index) => {
-          <Choice key={index} name={choice.name} onClick={choice.correct ? handleCorrect : null}/>
+          <Choice key={index} name={choice.property} onClick={choice.correct ? handleCorrect(choice.correct) : null}/>
         })}
         <Choices hideVideo={toggleVideo}/>
       </div>
