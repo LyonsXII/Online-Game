@@ -24,34 +24,30 @@ app.get("/api", (req, res) => {
   res.json({ "users": ["userOne", "userTwo", "userThree"] })
 });
 
-app.post("/choices", (req, res) => {
-  const difficulty = req.body.difficulty;
-  const category = req.body.category;
-  let choices = [];
+app.post("/choices", async (req, res) => {
+  const difficulty = "Easy";
+  const category = "Anime";
+  let choices = {};
 
-  db.query("SELECT id, property FROM songs WHERE difficulty=$1 AND category=$2 ORDER BY RANDOM() LIMIT 4", [difficulty, category], (err, res) => {
-      if (err) {
-        console.error("Error executing query", err.stack);
-      } else {
-        console.log("User data:", res.rows);
-  
-        choices.push(res.rows);
-      }
-    });
+  try {
+    choices = await db.query("SELECT id, property FROM songs WHERE difficulty=$1 AND category=$2 ORDER BY RANDOM() LIMIT 4", [difficulty, category]);
+    choices = choices.rows;
 
-  db.query("SELECT * FROM songs WHERE id = $1", [choices[0].id], (err, res) => {
-    if (err) {
-      console.error("Error executing query", err.stack);
-    } else {
-      console.log("User data:", res.rows);
+  } catch(err) {
+    console.log(err)
+  }
 
-      choices[0] = res.rows;
-    }
-  });
+  try {
+    choices[0] = await db.query("SELECT * FROM songs WHERE id=$1", [choices[0].id]);
+    choices[0] = choices[0].rows[0];
+
+  } catch(err) {
+    console.log(err)
+  }
 
   choices[0]["correct"] = true;
-  for (let i = 0; i < 2; i++) {choices[i]["correct"] = false;}
-  choices = JSON.stringify(choices);
+  for (let i = 1; i < 4; i++) {choices[i]["correct"] = false;}
+  // choices = JSON.stringify(choices);
   res.json(choices)
 });
 

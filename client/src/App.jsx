@@ -1,30 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import useSound from 'use-sound';
 import HomeButton from "./HomeButton";
 import Video from "./Video";
-import Choices from "./Choices"
+import Choice from "./Choice"
 import Button from '@mui/material/Button';
 import { Repeat } from '@mui/icons-material';
+import myAudio from "./music/anime/Angel Beats OP1 - Hard.mp3";
 
 function App() {
   const [hidden, setHidden] = useState(true);
   const [intro, setIntro] = useState(true);
+  const [difficulty, setDifficulty] = useState("Easy");
+  const [category, setCategory] = useState("Anime");
   const [choices, setChoices] = useState([{}]);
   const [answer, setAnswer] = useState({option1: null, option2: null, option3: null, option4: null});
-  
-  function fetchQuestion(difficulty, category) {
-    const API_URL = "/choices" + "?difficulty=" + difficulty + "&category=" + category;
-    useEffect(() => {
-      fetch(API_URL).then(
-        response => response.json()
-      ).then(
-        data => {
-          setChoices(data);
-        }
-      )
-    }, []);
-    
-    // Shuffle choices using Fisher-Yates
-    function shuffle(array) {
+  const [playSound] = useSound(myAudio);
+
+  const fetchData = async () => {
+    try {
+      // Make a POST request to your backend endpoint with the postData
+      const postData = {"category": category, "difficulty": difficulty};
+      const response = await axios.post('/choices', postData);
+      
+      // Set the data received from the backend to the state
+      setChoices(response.data);
+      console.log(choices);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  useEffect(() => {console.log(choices);}, [choices]); // Run the effect when choices state changes
+
+  function shuffle(array) {
       var m = array.length, t, i;
 
       while (m) {
@@ -35,13 +43,12 @@ function App() {
       }
 
       return array;
-    }
-
-    setChoices(shuffle(choices));
   }
 
   function startGame() {
     setIntro(false);
+    fetchData();
+    console.log(category, difficulty);
   }
 
   function resetGame() {
@@ -49,23 +56,55 @@ function App() {
     setHidden(true);
   }
 
+  function handleCategory(event) {
+    const category = event.target.value;
+    setCategory(category);
+  }
+
+  function handleDifficulty(event) {
+    const difficulty = event.target.value;
+    setDifficulty(difficulty);
+  }
+
   function toggleVideo() {
     hidden ? setHidden(false) : setHidden(true);
   }
 
-  function handleCorrect(correct) {
-    if (correct) {
-      return { backgroundColor: correct }
-    } else {
-      return { backgroundColor: correct }
-    }
+  function handleClick(event) {
+    handleAnswer(event);
+    toggleVideo();
+  }
+
+  function handleAnswer(event) {
+    console.log("hey");
+    const {index, id, property, correct} = event.target;
+    const optionNumber = "option" + index;
+    setAnswer((prevValue) => {
+      return {
+        ...prevValue,
+        [optionNumber]: correct
+      }
+    });
   }
 
   if (intro) {
     return (
-      <div class="flexbox">
+      <div>
         <HomeButton resetGame={resetGame}/>
-        <Button onClick={startGame} variant="contained" class="option-button">Start</Button>
+        <div className="grid">
+          <div className = "flexbox">
+            <Button onClick={handleCategory} value="Anime" variant="contained" className="option-button">Anime</Button>
+            <Button onClick={handleCategory} value="TV" variant="contained" className="option-button">TV</Button>
+            <Button onClick={handleCategory} value="Movies" variant="contained" className="option-button">Movies</Button>
+          </div>
+          <div className = "flexbox">
+            <Button onClick={handleDifficulty} value="Easy" variant="contained" className="option-button">Easy</Button>
+            <Button onClick={handleDifficulty} value="Hard" variant="contained" className="option-button">Hard</Button>
+          </div>
+          <div className="flexbox">
+            <Button onClick={startGame} variant="contained" className="option-button">Start</Button>
+          </div>
+        </div>
       </div>
     )
   } else {
@@ -73,13 +112,14 @@ function App() {
       <div>
         <HomeButton resetGame={resetGame}/>
         {hidden ? 
-          <div class="empty-box"><h1>Guess the Song... <Repeat fontSize="large" sx={{ textShadow: 5, marginLeft: 2 }} /></h1></div> : 
+          <div className="empty-box"><h1>Guess the Song... <Repeat onClick={() => playSound()} fontSize="large" sx={{ textShadow: 5, marginLeft: 2 }} /></h1></div> : 
           <Video hidden={hidden} url="https://www.youtube.com/embed/kNyR46eHDxE" />
         }
-        {choices.map((choice, index) => {
-          <Choice key={index} name={choice.property} onClick={choice.correct ? handleCorrect(choice.correct) : null}/>
-        })}
-        <Choices hideVideo={toggleVideo}/>
+        <div className="grid">
+          {choices.map((choice, index) => {
+            return <Choice key={index} index={index} id={choice.id} property={choice.property} correct={choice.correct} onClick={handleClick}/>
+          })}
+        </div>
       </div>
     )
   }
