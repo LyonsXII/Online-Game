@@ -6,7 +6,6 @@ import Video from "./Video";
 import Choice from "./Choice"
 import Button from '@mui/material/Button';
 import { Repeat } from '@mui/icons-material';
-import myAudio from "./music/anime/Angel Beats OP1 - Hard.mp3";
 
 function App() {
   const [hidden, setHidden] = useState(true);
@@ -15,7 +14,8 @@ function App() {
   const [category, setCategory] = useState("Anime");
   const [choices, setChoices] = useState([{}]);
   const [answer, setAnswer] = useState({option1: null, option2: null, option3: null, option4: null});
-  const [playSound] = useSound(myAudio);
+  const [selectedSong, setSelectedSong] = useState("");
+  const [play, { stop }] = useSound();
 
   const fetchData = async () => {
     try {
@@ -25,12 +25,11 @@ function App() {
       
       // Set the data received from the backend to the state
       setChoices(response.data);
-      console.log(choices);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
-  useEffect(() => {console.log(choices);}, [choices]); // Run the effect when choices state changes
+  useEffect(() => {}, [choices]); // Run the effect when choices state changes
 
   function shuffle(array) {
       var m = array.length, t, i;
@@ -45,10 +44,17 @@ function App() {
       return array;
   }
 
+  async function activateSound() {
+    const sound = await import("./music/anime/Angel Beats OP1 - Hard.mp3");
+    setSelectedSong("./music/anime/Angel Beats OP1 - Hard.mp3");
+    console.log(sound.default);
+    play(sound.default);
+  }
+  useEffect(() => {console.log(selectedSong);}, [selectedSong]);
+
   function startGame() {
-    setIntro(false);
     fetchData();
-    console.log(category, difficulty);
+    setIntro(false);
   }
 
   function resetGame() {
@@ -112,7 +118,7 @@ function App() {
       <div>
         <HomeButton resetGame={resetGame}/>
         {hidden ? 
-          <div className="empty-box"><h1>Guess the Song... <Repeat onClick={() => playSound()} fontSize="large" sx={{ textShadow: 5, marginLeft: 2 }} /></h1></div> : 
+          <div className="empty-box"><h1>Guess the Song... <Repeat onClick={() => activateSound()} fontSize="large" sx={{ textShadow: 5, marginLeft: 2 }} /></h1></div> : 
           <Video hidden={hidden} url="https://www.youtube.com/embed/kNyR46eHDxE" />
         }
         <div className="grid">
