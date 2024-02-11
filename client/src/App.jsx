@@ -27,7 +27,8 @@ function App() {
   const [difficulty, setDifficulty] = useState("Easy");
   const [category, setCategory] = useState("Anime");
   const [choices, setChoices] = useState([{}]);
-  const [answer, setAnswer] = useState({option1: null, option2: null, option3: null, option4: null});
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [answer, setAnswer] = useState([{0: null, 1: null, 2: null, 3: null}]);
   const [selectedSong, setSelectedSong] = useState(myAudio);
   const [play, { stop }] = useSound(selectedSong);
 
@@ -66,6 +67,7 @@ function App() {
   function startGame() {
     fetchData();
     setIntro(false);
+    setShowAnswer(false);
   }
 
   function resetGame() {
@@ -93,14 +95,17 @@ function App() {
   }
 
   function handleAnswer(event) {
-    const {index, id, property, correct} = event.target;
-    const optionNumber = "option" + index;
-    setAnswer((prevValue) => {
-      return {
-        ...prevValue,
-        [optionNumber]: correct
-      }
-    });
+    const index = event.target.getAttribute("index");
+    const correct = event.target.getAttribute("correct");
+    if (correct) {
+      setAnswer((prevValue) => {
+        return {
+          ...prevValue,
+          [index]: true
+        }
+      });
+    }
+    setShowAnswer(true);
   }
 
   if (intro) {
@@ -133,7 +138,7 @@ function App() {
         }
         <div className="grid">
           {choices.map((choice, index) => {
-            return <Choice key={index} index={index} id={choice.id} property={choice.property} correct={choice.correct} onClick={handleClick}/>
+            return <Choice key={index} index={index} id={choice.id} property={choice.property} correct={choice.correct} answer={answer[0]} showAnswer={showAnswer} handleClick={handleClick} />
           })}
         </div>
       </div>
