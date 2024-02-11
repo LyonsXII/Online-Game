@@ -1,11 +1,25 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import useSound from 'use-sound';
+import { useSound } from 'use-sound';
 import HomeButton from "./HomeButton";
 import Video from "./Video";
 import Choice from "./Choice"
 import Button from '@mui/material/Button';
 import { Repeat } from '@mui/icons-material';
+import myAudio from "./music/anime/Angel Beats OP1 - Easy.mp3";
+
+// Importing all mp3 files located src/music
+// Files can be accessed via format audioFiles["music/anime/AngelBeats OP1 - Easy"]
+const importAll = (context) => {
+  let audioFiles = {};
+  context.keys().forEach((filename) => {
+    const audioName = filename.replace("./", "").replace(".mp3", "");
+    audioFiles[audioName] = context(filename);
+  });
+  return audioFiles;
+};
+const audioContext = require.context("./", true, /\.mp3$/);
+const audioFiles = importAll(audioContext);
 
 function App() {
   const [hidden, setHidden] = useState(true);
@@ -14,8 +28,8 @@ function App() {
   const [category, setCategory] = useState("Anime");
   const [choices, setChoices] = useState([{}]);
   const [answer, setAnswer] = useState({option1: null, option2: null, option3: null, option4: null});
-  const [selectedSong, setSelectedSong] = useState("");
-  const [play, { stop }] = useSound();
+  const [selectedSong, setSelectedSong] = useState(myAudio);
+  const [play, { stop }] = useSound(selectedSong);
 
   const fetchData = async () => {
     try {
@@ -29,7 +43,7 @@ function App() {
       console.error('Error fetching data:', error);
     }
   };
-  useEffect(() => {}, [choices]); // Run the effect when choices state changes
+  useEffect(() => {updateSong()}, [choices]);
 
   function shuffle(array) {
       var m = array.length, t, i;
@@ -44,13 +58,10 @@ function App() {
       return array;
   }
 
-  async function activateSound() {
-    const sound = await import("./music/anime/Angel Beats OP1 - Hard.mp3");
-    setSelectedSong("./music/anime/Angel Beats OP1 - Hard.mp3");
-    console.log(sound.default);
-    play(sound.default);
+  function updateSong() {
+    const chosenSong = choices.filter((choice) => {return choice.correct === true;});
+    if (chosenSong.length == 1) {setSelectedSong(audioFiles[chosenSong[0].location]);}
   }
-  useEffect(() => {console.log(selectedSong);}, [selectedSong]);
 
   function startGame() {
     fetchData();
@@ -82,7 +93,6 @@ function App() {
   }
 
   function handleAnswer(event) {
-    console.log("hey");
     const {index, id, property, correct} = event.target;
     const optionNumber = "option" + index;
     setAnswer((prevValue) => {
@@ -118,7 +128,7 @@ function App() {
       <div>
         <HomeButton resetGame={resetGame}/>
         {hidden ? 
-          <div className="empty-box"><h1>Guess the Song... <Repeat onClick={() => activateSound()} fontSize="large" sx={{ textShadow: 5, marginLeft: 2 }} /></h1></div> : 
+          <div className="empty-box"><h1>Guess the Song... <Repeat onClick={() => play()} fontSize="large" sx={{ textShadow: 5, marginLeft: 2 }} /></h1></div> : 
           <Video hidden={hidden} url="https://www.youtube.com/embed/kNyR46eHDxE" />
         }
         <div className="grid">
