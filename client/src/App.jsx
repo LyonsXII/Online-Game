@@ -7,6 +7,9 @@ import Choice from "./Choice"
 import Button from '@mui/material/Button';
 import { Repeat } from '@mui/icons-material';
 import myAudio from "./music/anime/Angel Beats OP1 - Easy.mp3";
+import click from "./music/misc/Click.mp3";
+import victory from "./music/misc/Victory.mp3";
+import defeat from "./music/misc/Defeat.mp3";
 
 // Import all mp3 files located inside src/music
 // Files can be accessed via format audioFiles["music/anime/AngelBeats OP1 - Easy"]
@@ -29,10 +32,13 @@ function App() {
   const [choices, setChoices] = useState([{}]);
   const [showAnswer, setShowAnswer] = useState(false);
   const [answer, setAnswer] = useState([{0: null, 1: null, 2: null, 3: null}]);
+  const [clickNoise] = useSound(click);
+  const [playWin] = useSound(victory);
+  const [playLose] = useSound(defeat);
   const [selectedSong, setSelectedSong] = useState(myAudio);
   const [play, { stop }] = useSound(selectedSong);
 
-  // Fetch four choices from our database 
+  // Fetch four options from our database 
   async function fetchData() {
     function shuffle(array) {
       // Fisher-Yates shuffle algorithm
@@ -51,7 +57,7 @@ function App() {
       // Post request to backend
       const postData = {"category": category, "difficulty": difficulty};
       const response = await axios.post('/choices', postData);
-      
+
       // Setting retrieved data
       const shuffledChoices = shuffle(response.data);
       setChoices(shuffledChoices);
@@ -67,22 +73,26 @@ function App() {
   }
 
   function startGame() {
+    clickNoise();
     fetchData();
     setIntro(false);
     setShowAnswer(false);
   }
 
   function resetGame() {
+    clickNoise();
     setIntro(true);
     setHidden(true);
   }
 
   function handleCategory(event) {
+    clickNoise();
     const category = event.target.value;
     setCategory(category);
   }
 
   function handleDifficulty(event) {
+    clickNoise();
     const difficulty = event.target.value;
     setDifficulty(difficulty);
   }
@@ -92,6 +102,7 @@ function App() {
   }
 
   function handleClick(event) {
+    clickNoise();
     handleAnswer(event);
     toggleVideo();
   }
@@ -100,14 +111,18 @@ function App() {
     const index = event.target.getAttribute("index");
     const correct = event.target.getAttribute("correct");
     if (correct) {
+      playWin();
       setAnswer((prevValue) => {
         return {
           ...prevValue,
           [index]: true
         }
       });
+    } else {
+      playLose();
     }
     setShowAnswer(true);
+    stop();
   }
 
   if (intro) {

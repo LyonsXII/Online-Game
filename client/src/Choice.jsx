@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from '@mui/material/Button';
 
 function Choices(props) {
-  const trueOrFalse = props.correct ? {backgroundColor: "green"} : {backgroundColor: "red"};
+  const trueOrFalse = props.correct == true ? {backgroundColor: "green"} : {backgroundColor: "red"};
 
   return (
           <div className="choice">
