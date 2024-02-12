@@ -110,6 +110,8 @@ function App() {
   function handleAnswer(event) {
     const index = event.target.getAttribute("index");
     const correct = event.target.getAttribute("correct");
+    console.log(event.target);
+    console.log(correct);
     if (correct) {
       playWin();
       setAnswer((prevValue) => {
