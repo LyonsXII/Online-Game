@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import { Repeat } from '@mui/icons-material';
 import myAudio from "./music/anime/Angel Beats OP1 - Easy.mp3";
 
-// Importing all mp3 files located src/music
+// Import all mp3 files located inside src/music
 // Files can be accessed via format audioFiles["music/anime/AngelBeats OP1 - Easy"]
 const importAll = (context) => {
   let audioFiles = {};
@@ -24,7 +24,7 @@ const audioFiles = importAll(audioContext);
 function App() {
   const [hidden, setHidden] = useState(true);
   const [intro, setIntro] = useState(true);
-  const [difficulty, setDifficulty] = useState("Easy");
+  const [difficulty, setDifficulty] = useState("Hard");
   const [category, setCategory] = useState("Anime");
   const [choices, setChoices] = useState([{}]);
   const [showAnswer, setShowAnswer] = useState(false);
@@ -32,32 +32,34 @@ function App() {
   const [selectedSong, setSelectedSong] = useState(myAudio);
   const [play, { stop }] = useSound(selectedSong);
 
-  const fetchData = async () => {
-    try {
-      // Make a POST request to your backend endpoint with the postData
-      const postData = {"category": category, "difficulty": difficulty};
-      const response = await axios.post('/choices', postData);
-      
-      // Set the data received from the backend to the state
-      setChoices(response.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-  useEffect(() => {updateSong()}, [choices]);
-
-  function shuffle(array) {
+  // Fetch four choices from our database 
+  async function fetchData() {
+    function shuffle(array) {
+      // Fisher-Yates shuffle algorithm
       var m = array.length, t, i;
-
+  
       while (m) {
         i = Math.floor(Math.random() * m--);
         t = array[m];
         array[m] = array[i];
         array[i] = t;
       }
-
+  
       return array;
-  }
+    }
+    try {
+      // Post request to backend
+      const postData = {"category": category, "difficulty": difficulty};
+      const response = await axios.post('/choices', postData);
+      
+      // Setting retrieved data
+      const shuffledChoices = shuffle(response.data);
+      setChoices(shuffledChoices);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  useEffect(() => {updateSong()}, [choices]);
 
   function updateSong() {
     const chosenSong = choices.filter((choice) => {return choice.correct === true;});

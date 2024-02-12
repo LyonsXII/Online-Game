@@ -17,16 +17,12 @@ const db = new pg.Client({
 
 db.connect();
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(express.static("public"));
 
-app.get("/api", (req, res) => {
-  res.json({ "users": ["userOne", "userTwo", "userThree"] })
-});
-
 app.post("/choices", async (req, res) => {
-  const difficulty = "Easy";
-  const category = "Anime";
+  const difficulty = req.body.difficulty;
+  const category = req.body.category;
   let choices = {};
 
   try {
