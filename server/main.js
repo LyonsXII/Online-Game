@@ -43,7 +43,6 @@ app.post("/choices", async (req, res) => {
 
   choices[0]["correct"] = true;
   for (let i = 1; i < 4; i++) {choices[i]["correct"] = false;}
-  // choices = JSON.stringify(choices);
   res.json(choices)
 });
 

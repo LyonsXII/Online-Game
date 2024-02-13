@@ -31,6 +31,7 @@ function App() {
   const [category, setCategory] = useState("Anime");
   const [choices, setChoices] = useState([{}]);
   const [showAnswer, setShowAnswer] = useState(false);
+  const [videoURL, setVideoURL] = useState("https://www.youtube.com/watch?v=7U7BDn-gU18");
   const [clickNoise] = useSound(click);
   const [playWin] = useSound(victory);
   const [playLose] = useSound(defeat);
@@ -58,18 +59,14 @@ function App() {
       const response = await axios.post('/choices', postData);
 
       // Setting retrieved data
+      setVideoURL(response.data[0].video_link);
+      setSelectedSong(audioFiles[response.data[0].location]);
       const shuffledChoices = shuffle(response.data);
       setChoices(shuffledChoices);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
-  useEffect(() => {updateSong()}); // Changed from: useEffect(() => {updateSong()}, [choices]); not sure why it's still working?
-
-  function updateSong() {
-    const chosenSong = choices.filter((choice) => {return choice.correct === true;});
-    if (chosenSong.length === 1) {setSelectedSong(audioFiles[chosenSong[0].location]);}
-  }
 
   function startGame() {
     clickNoise();
@@ -142,7 +139,7 @@ function App() {
         <HomeButton resetGame={resetGame}/>
         {hidden ? 
           <div className="empty-box"><h1>Guess the Song... <Repeat onClick={() => play()} fontSize="large" sx={{ textShadow: 5, marginLeft: 2 }} /></h1></div> : 
-          <Video hidden={hidden} url="https://www.youtube.com/embed/kNyR46eHDxE" />
+          <Video hidden={hidden} url={videoURL} />
         }
         <div className="grid">
           {choices.map((choice, index) => {
