@@ -31,7 +31,6 @@ function App() {
   const [category, setCategory] = useState("Anime");
   const [choices, setChoices] = useState([{}]);
   const [showAnswer, setShowAnswer] = useState(false);
-  const [answer, setAnswer] = useState([{0: null, 1: null, 2: null, 3: null}]);
   const [clickNoise] = useSound(click);
   const [playWin] = useSound(victory);
   const [playLose] = useSound(defeat);
@@ -65,11 +64,11 @@ function App() {
       console.error('Error fetching data:', error);
     }
   };
-  useEffect(() => {updateSong()}, [choices]);
+  useEffect(() => {updateSong()}); // Changed from: useEffect(() => {updateSong()}, [choices]); not sure why it's still working?
 
   function updateSong() {
     const chosenSong = choices.filter((choice) => {return choice.correct === true;});
-    if (chosenSong.length == 1) {setSelectedSong(audioFiles[chosenSong[0].location]);}
+    if (chosenSong.length === 1) {setSelectedSong(audioFiles[chosenSong[0].location]);}
   }
 
   function startGame() {
@@ -101,25 +100,15 @@ function App() {
     hidden ? setHidden(false) : setHidden(true);
   }
 
-  function handleClick(event) {
+  function handleClick(correct) {
     clickNoise();
-    handleAnswer(event);
+    handleAnswer(correct);
     toggleVideo();
   }
 
-  function handleAnswer(event) {
-    const index = event.target.getAttribute("index");
-    const correct = event.target.getAttribute("correct");
-    console.log(event.target);
-    console.log(correct);
+  function handleAnswer(correct) {
     if (correct) {
       playWin();
-      setAnswer((prevValue) => {
-        return {
-          ...prevValue,
-          [index]: true
-        }
-      });
     } else {
       playLose();
     }
@@ -157,7 +146,7 @@ function App() {
         }
         <div className="grid">
           {choices.map((choice, index) => {
-            return <Choice key={index} index={index} id={choice.id} property={choice.property} correct={choice.correct} answer={answer[0]} showAnswer={showAnswer} handleClick={handleClick} />
+            return <Choice key={index} index={index} id={choice.id} property={choice.property} correct={choice.correct} showAnswer={showAnswer} handleClick={handleClick} />
           })}
         </div>
       </div>
