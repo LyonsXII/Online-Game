@@ -38,7 +38,7 @@ function App() {
   const [selectedSong, setSelectedSong] = useState(myAudio);
   const [play, { stop }] = useSound(selectedSong);
 
-  // Fetch four options from our database 
+  // Fetch options from database
   async function fetchData() {
     function shuffle(array) {
       // Fisher-Yates shuffle algorithm
