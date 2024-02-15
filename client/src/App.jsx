@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useSound } from 'use-sound';
 import HomeButton from "./HomeButton";
@@ -120,8 +120,8 @@ function App() {
         <div className="grid">
           <div className = "flexbox">
             <Button onClick={handleCategory} value="Anime" variant="contained" className="option-button">Anime</Button>
-            <Button onClick={handleCategory} value="TV" variant="contained" className="option-button">TV</Button>
-            <Button onClick={handleCategory} value="Movies" variant="contained" className="option-button">Movies</Button>
+            <Button onClick={handleCategory} value="Indie" variant="contained" className="option-button">Indie</Button>
+            <Button onClick={handleCategory} value="Games" variant="contained" className="option-button">Games</Button>
           </div>
           <div className = "flexbox">
             <Button onClick={handleDifficulty} value="Easy" variant="contained" className="option-button">Easy</Button>
