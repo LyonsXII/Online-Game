@@ -8,11 +8,6 @@ body {
 
   background-color: #3b006e;
   background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  min-width: 100vw;
 }
 
 code {
@@ -58,21 +53,9 @@ iframe {
   width: 100%;
 }
 
-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #7215c2;
-  color: antiquewhite;
-  font-size: 1rem;
-  width: fit-content;
-  padding: 4px 40px;
-  border-radius: 20px;
-}
-
 .home-button {
-  height: 40px;
-  width: 40px;
+  height: 20px;
+  width: 20px;
   position: absolute;
   top: 20px;
   right: 20px;
