@@ -142,48 +142,48 @@ function App() {
           </Box>
           <Container>
             <Box sx={{
-                display: "flex", 
-                height: 1,
-                justifyContent: "center",
-                marginTop: 1
-              }}>
-              <Grid container spacing={1} sx={{width: 0.6}}>
-                <Grid item xs={4}>
-                  <Button onClick={handleCategory} value="Anime" variant="contained" sx={{width: 1}}>Anime</Button>
-                </Grid>
-                <Grid item xs={4}>
-                  <Button onClick={handleCategory} value="Indie" variant="contained" sx={{width: 1}}>Indie</Button>
-                </Grid>
-                <Grid item xs={4}>
-                <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1}}>Games</Button>
-                </Grid>
-                <Grid item xs={4}>
-                  <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1}}>Movies</Button>
-                </Grid>
-                <Grid item xs={4}>
-                  <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1}}>TV</Button>
-                </Grid>
-                <Grid item xs={4}>
-                  <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1}}>Top 40</Button>
-                </Grid>
-              </Grid>
-              </Box>
-            <Box sx={{
-                display: "flex", 
-                gap: 1, 
-                justifyContent: "center",
-                marginTop: 1
-              }}>
-                <Button onClick={handleDifficulty} value="Easy" variant="contained" sx={{width: 0.2}}>Easy</Button>
-                <Button onClick={handleDifficulty} value="Hard" variant="contained" sx={{width: 0.2}}>Hard</Button>
-              </Box>
+              display: "flex"
+            }}>
               <Box sx={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: 1,
-                width: 1
-              }}>
-                <Button onClick={startGame} variant="contained" sx={{width: 0.1}}>Start</Button>
+                  display: "flex", 
+                  flexWrap: "wrap",
+                  height: 1,
+                  width: 0.4,
+                  justifyContent: "center",
+                  marginTop: 1,
+                  gap: 1
+                }}>
+                    <Button onClick={handleCategory} value="Anime" variant="contained" sx={{width: 0.4}}>Anime</Button>
+                    <Button onClick={handleCategory} value="Indie" variant="contained" sx={{width: 0.4}}>Indie</Button>
+                    <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 0.4}}>Games</Button>
+                    <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 0.4}}>Movies</Button>
+                    <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 0.4}}>TV</Button>
+                    <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 0.4}}>Top 40</Button>
+                </Box>
+              <Box sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  height: 1,
+                  width: 0.2,
+                  gap: 1, 
+                  justifyContent: "center",
+                  marginTop: 1,
+                  marginRight: 1
+                }}>
+                  <Button onClick={handleDifficulty} value="Easy" variant="contained" sx={{width: 1}}>Easy</Button>
+                  <Button onClick={handleDifficulty} value="Hard" variant="contained" sx={{width: 1}}>Hard</Button>
+                </Box>
+                <Box sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  height: 1,
+                  width: 0.2,
+                  gap: 1, 
+                  justifyContent: "center",
+                  marginTop: 1
+                }}>
+                  <Button onClick={startGame} variant="contained" sx={{width: 1}}>Start</Button>
+              </Box>
             </Box>
           </Container>
         </div>
@@ -191,7 +191,15 @@ function App() {
   } else {
     return (
       <div>
-        <HomeButton resetGame={resetGame} className="home-button"/>
+        <Box sx={{
+          display: "flex", 
+          gap: 1, 
+          justifyContent: "end",
+          marginTop: 2,
+          marginRight: 2
+        }}>
+        <HomeButton resetGame={resetGame}/>
+      </Box>
         {hidden ? 
           <div className="empty-box"><h1>Guess the Song... <Repeat onClick={() => play()} fontSize="large" sx={{ textShadow: 5, marginLeft: 2 }} /></h1></div> : 
           <Video hidden={hidden} url={videoURL} />
