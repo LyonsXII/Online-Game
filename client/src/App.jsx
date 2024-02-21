@@ -79,6 +79,13 @@ function App() {
     setShowAnswer(false);
   }
 
+  function nextQuestion() {
+    clickNoise();
+    fetchData();
+    setShowAnswer(false);
+    setHidden(true);
+  }
+
   function resetGame() {
     clickNoise();
     setIntro(true);
@@ -198,17 +205,27 @@ function App() {
           marginTop: 2,
           marginRight: 2
         }}>
-        <HomeButton resetGame={resetGame}/>
-      </Box>
-        {hidden ? 
-          <div className="empty-box"><h1>Guess the Song... <Repeat onClick={() => play()} fontSize="large" sx={{ textShadow: 5, marginLeft: 2 }} /></h1></div> : 
-          <Video hidden={hidden} url={videoURL} />
-        }
-        <div className="grid">
-          {choices.map((choice, index) => {
-            return <Choice key={index} index={index} id={choice.id} property={choice.property} correct={choice.correct} showAnswer={showAnswer} handleClick={handleClick} />
-          })}
-        </div>
+          <HomeButton resetGame={resetGame}/>
+        </Box>
+        <Box sx={{
+                  display: "flex",
+                  height: 1,
+                  width: 1,
+                  gap: 1, 
+                  justifyContent: "center",
+                  marginTop: 1
+                }}>
+          {hidden ? 
+            <div className="empty-box"><h1>Guess the Song... <Repeat onClick={() => play()} fontSize="large" sx={{ textShadow: 5, marginLeft: 2 }} /></h1></div> : 
+            <Video hidden={hidden} url={videoURL} />
+          }
+          <div className="grid">
+            {choices.map((choice, index) => {
+              return <Choice key={index} index={index} id={choice.id} property={choice.property} correct={choice.correct} showAnswer={showAnswer} handleClick={handleClick} />
+            })}
+          </div>
+          {hidden ? null : <Box><Button onClick={nextQuestion} variant="contained" sx={{width: 1}}>Next</Button></Box>}
+        </Box>
       </div>
     )
   }
