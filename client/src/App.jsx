@@ -148,41 +148,44 @@ function App() {
             <HomeButton resetGame={resetGame}/>
           </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "center", marginTop: 16}}>
-            <Typography variant="h1" color="antiquewhite" sx={{ textShadow: "4px 4px #000000" }}>Song Guesser</Typography>
-          </Box>
+          <Container sx={{ display: "flex", width: 0.8, justifyContent: "center", alignItems: "center" }} style={{ minHeight: "100vh" }}>
+            <Grid container spacing={2} sx={{ width: 1 }}>
 
-          <Container sx={{ display: "flex", marginTop: 4, width: 0.8 }}>
-            <Grid container spacing={2} sx={{ marginRight: 4, width: 0.5 }}>
-              <Grid item xs={6}>
-                <Button onClick={handleCategory} value="Anime" variant="contained" sx={{width: 1}}>Anime</Button>
+              <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+                  <Typography variant="h1" color="antiquewhite" sx={{ textShadow: "4px 4px #000000" }}>Song Guesser</Typography>
               </Grid>
-              <Grid item xs={6}>
-                <Button onClick={handleCategory} value="Indie" variant="contained" sx={{width: 1}}>Indie</Button>
-              </Grid>
-              <Grid item xs={6}>
-                <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1}}>Games</Button>
-              </Grid>
-              <Grid item xs={6}>
-                <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1}}>Movies</Button>
-              </Grid>
-              <Grid item xs={6}>
-                <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1}}>TV</Button>
-              </Grid>
-              <Grid item xs={6}>
-                <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1}}>Top 40</Button>
-              </Grid>
-            </Grid>
 
-            <Grid container spacing={2} sx={{ width: 0.5, justifyContent: "center", alignItems: "center" }}>
-              <Grid item xs={6}>
-                <Button onClick={handleDifficulty} value="Easy" variant="contained" sx={{width: 1}}>Easy</Button>
+              <Grid container spacing={2} sx={{ marginRight: 4, width: 0.5, marginTop: 2 }}>
+                <Grid item xs={6}>
+                  <Button onClick={handleCategory} value="Anime" variant="contained" sx={{width: 1}}>Anime</Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button onClick={handleCategory} value="Indie" variant="contained" sx={{width: 1}}>Indie</Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1}}>Games</Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1 }}>Movies</Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1}}>TV</Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1}}>Top 40</Button>
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <Button onClick={handleDifficulty} value="Hard" variant="contained" sx={{width: 1}}>Hard</Button>
-              </Grid>
-              <Grid item xs={8}>
-                <Button onClick={startGame} variant="contained" sx={{width: 1}}>Start</Button>
+
+              <Grid container spacing={2} sx={{ width: 0.5, justifyContent: "center", alignItems: "center", marginTop: 2 }}>
+                <Grid item xs={6}>
+                  <Button onClick={handleDifficulty} value="Easy" variant="contained" sx={{width: 1}}>Easy</Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button onClick={handleDifficulty} value="Hard" variant="contained" sx={{width: 1}}>Hard</Button>
+                </Grid>
+                <Grid item xs={12}>
+                  <Button onClick={startGame} variant="contained" sx={{width: 1, height: 90}}>Start</Button>
+                </Grid>
               </Grid>
 
             </Grid>
@@ -192,34 +195,25 @@ function App() {
   } else {
     return (
       <div>
-        <Box sx={{
-          display: "flex", 
-          gap: 1, 
-          justifyContent: "end",
-          marginTop: 2,
-          marginRight: 2
-        }}>
+        <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2 }}>
           <HomeButton resetGame={resetGame}/>
         </Box>
-        <Box sx={{
-                  display: "flex",
-                  height: 1,
-                  width: 1,
-                  gap: 1, 
-                  justifyContent: "center",
-                  marginTop: 1
-                }}>
-          {hidden ? 
-            <div className="empty-box"><h1>Guess the Song... <Repeat onClick={() => play()} fontSize="large" sx={{ textShadow: 5, marginLeft: 2 }} /></h1></div> : 
-            <Video hidden={hidden} url={videoURL} />
-          }
-          <div className="grid">
-            {choices.map((choice, index) => {
-              return <Choice key={index} index={index} id={choice.id} property={choice.property} correct={choice.correct} showAnswer={showAnswer} handleClick={handleClick} />
-            })}
-          </div>
-          {hidden ? null : <Box><Button onClick={nextQuestion} variant="contained" sx={{width: 1}}>Next</Button></Box>}
-        </Box>
+        <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: 0.8 }} style={{minHeight: "100vh"}}>
+          <Grid container spacing={2} sx={{ width: 0.5, justifyContent: "center", alignItems: "center", rowGap: 0 }}>
+            {hidden ? 
+              <div className="empty-box">
+                <h1>Guess the Song... <Repeat onClick={() => play()} fontSize="large" sx={{ textShadow: 5, marginLeft: 2 }} /></h1>
+              </div> 
+              : <Video hidden={hidden} url={videoURL} />
+            }
+            <div className="grid">
+              {choices.map((choice, index) => {
+                return <Choice key={index} index={index} id={choice.id} property={choice.property} correct={choice.correct} showAnswer={showAnswer} handleClick={handleClick} />
+              })}
+            </div>
+            {hidden ? null : <Box><Button onClick={nextQuestion} variant="contained" sx={{width: 1}}>Next</Button></Box>}
+          </Grid>
+        </Container>
       </div>
     )
   }
