@@ -16,41 +16,7 @@ body {
     monospace;
 } */
 
-
-.flexbox {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.empty-box {
-  height: "280px";
-  width: "500px";
-  color: antiquewhite;
-  text-shadow: 4px 4px #000000;
-}
-
 h1, h2 {
   color: antiquewhite;
   text-shadow: 4px 4px #000000;
-}
-
-iframe {
-  border: 5px dashed antiquewhite;
-  height: 200px;
-  width: 100%;
-}
-
-.choice {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
-}
-
-
-.option-button {
-  height: 80%;
-  width: 70%;
 }

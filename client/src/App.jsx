@@ -112,6 +112,8 @@ function App() {
 
   let songTimeout;
   function playSong() {
+    let delayTime;
+    if (songInfo.difficulty == "Easy") {delayTime = 10000} else {delayTime = 5000}
     clearTimeout(songTimeout);
     if (playing === true) {
       stop();
@@ -119,7 +121,7 @@ function App() {
     } else {
       play();
       setPlaying(true);
-      songTimeout = setTimeout(() => {setPlaying(false);}, 5000);
+      songTimeout = setTimeout(() => {setPlaying(false);}, delayTime);
     }
   }
 
@@ -219,34 +221,32 @@ function App() {
         </Box>
         <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: 0.8 }} style={{minHeight: "100vh"}}>
           <Grid container spacing={2} sx={{ width: 1, justifyContent: "center", alignItems: "center"}}>
-            <Grid item xs={10} style={{width: 1}}>
+            <Grid item xs={8} style={{width: 1}}>
               {hidden ? 
-                <div className="empty-box">
-                  <h1>Guess the Song... <Repeat onClick={() => playSong()} fontSize="large" sx={{textShadow: 5, marginLeft: 2}} /></h1>
-                </div> 
-                : <Video hidden={hidden} url={videoURL}  />
+                <h1>Guess the Song... <Repeat onClick={() => playSong()} fontSize="large" sx={{textShadow: 5, marginLeft: 2}} /></h1>
+                : <Box sx={{alignSelf: "start"}}><Video hidden={hidden} url={videoURL}/></Box>
               }
             </Grid>
 
             {hidden ? null 
-              : <Grid item xs={1} sx={{marginLeft: 1, width: "10px !important"}}>
+              : <Grid item xs={1} sx={{marginLeft: 1, width: "10px"}}>
                   <Button onClick={nextQuestion} variant="contained" sx={{height: "80px", width: "10px", minWidth: "unset"}}><SkipNext sx={{height: "40px"}}/></Button>
                   <Button onClick={playSong} variant="contained" sx={{height: "80px", width: "10px", minWidth: "unset", marginTop: 2}}><Repeat sx={{height: "40px"}}/></Button>
                 </Grid>
             }
 
             {hidden ? null 
-              : <Box>
-                  <Grid item xs={12} sx={{alignSelf: "start", height: "20px", margin: 0, marginTop: 1}}>
-                    <h1 style={{margin: "0px"}}>{songInfo.property}</h1>
-                  </Grid>
-                  <Grid item xs={12} sx={{height: "14px", margin: 0}}><h2>{songInfo.song_name}</h2></Grid>
-                </Box>
+              : <Grid item xs={12} sx={{display: "flex", justifyContent: "flex-start", alignItems: "end", margin: 0}}>
+                    <Grid item ><h1 style={{margin: 0}}>{songInfo.property}</h1></Grid>
+                    <Grid item ><h2 style={{margin: 0, marginLeft: "20px"}}>{songInfo.song_name}</h2></Grid>
+                </Grid>
             }
 
-            <Grid container spacing={1} sx={{ width: 1, marginTop: 3 }}>
+            <Grid container spacing={1} sx={{width: 1, marginTop: 2}}>
               {choices.map((choice, index) => {
-                return <Grid item xs={6} sx={{ width: 1, height: 1 }}><Choice key={index} index={index} id={choice.id} property={choice.property} correct={choice.correct} showAnswer={showAnswer} handleClick={handleClick} /></Grid>
+                return <Grid item xs={6} sx={{ width: 1, height: 1 }}>
+                  <Choice key={index} index={index} id={choice.id} property={choice.property} correct={choice.correct} showAnswer={showAnswer} handleClick={handleClick} />
+                </Grid>
               })}
             </Grid>
           </Grid>
