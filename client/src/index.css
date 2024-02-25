@@ -16,13 +16,6 @@ body {
     monospace;
 } */
 
-.grid {
-  margin-top: 40px;
-  display: grid;
-  grid-template-columns: repeat(2, 250px);
-  grid-template-rows: repeat(2, 50px);
-  gap: 10px;
-}
 
 .flexbox {
   display: flex;
@@ -37,13 +30,15 @@ body {
   text-shadow: 4px 4px #000000;
 }
 
-.empty-box > h1 {
-  display: flex;
-  align-items: flex-end;
+h1, h2 {
+  color: antiquewhite;
+  text-shadow: 4px 4px #000000;
 }
 
 iframe {
   border: 5px dashed antiquewhite;
+  height: 200px;
+  width: 100%;
 }
 
 .choice {
@@ -54,14 +49,6 @@ iframe {
   width: 100%;
 }
 
-.home-button {
-  height: 20px;
-  width: 20px;
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 20px;
-}
 
 .option-button {
   height: 80%;

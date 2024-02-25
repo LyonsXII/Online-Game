@@ -4,6 +4,7 @@ import axios from "axios";
 
 import { Container, Box, Grid, Typography, createTheme } from "@mui/material";
 import { Repeat } from '@mui/icons-material';
+import { SkipNext } from '@mui/icons-material';
 
 import HomeButton from "./HomeButton";
 import Video from "./Video";
@@ -34,6 +35,7 @@ function App() {
   const [difficulty, setDifficulty] = useState("Hard");
   const [category, setCategory] = useState("Anime");
   const [choices, setChoices] = useState([{}]);
+  const [songInfo, setSongInfo] = useState([{}]);
   const [showAnswer, setShowAnswer] = useState(false);
   const [videoURL, setVideoURL] = useState("https://www.youtube.com/watch?v=7U7BDn-gU18");
   const [clickNoise] = useSound(click);
@@ -41,6 +43,7 @@ function App() {
   const [playLose] = useSound(defeat);
   const [selectedSong, setSelectedSong] = useState(myAudio);
   const [play, { stop }] = useSound(selectedSong);
+  const [playing, setPlaying] = useState(false);
 
   // Fetch options from database
   async function fetchData() {
@@ -65,6 +68,8 @@ function App() {
       // Setting retrieved data
       setVideoURL(response.data[0].video_link);
       setSelectedSong(audioFiles[response.data[0].location]);
+      const data = response.data[0];
+      setSongInfo({property: data.property, song_name: data.song_name, difficulty: data.difficulty});
       const shuffledChoices = shuffle(response.data);
       setChoices(shuffledChoices);
     } catch (error) {
@@ -102,6 +107,20 @@ function App() {
     clickNoise();
     const difficulty = event.target.value;
     setDifficulty(difficulty);
+  }
+
+
+  let songTimeout;
+  function playSong() {
+    clearTimeout(songTimeout);
+    if (playing === true) {
+      stop();
+      setPlaying(false);
+    } else {
+      play();
+      setPlaying(true);
+      songTimeout = setTimeout(() => {setPlaying(false);}, 5000);
+    }
   }
 
   function toggleVideo() {
@@ -199,19 +218,37 @@ function App() {
           <HomeButton resetGame={resetGame}/>
         </Box>
         <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: 0.8 }} style={{minHeight: "100vh"}}>
-          <Grid container spacing={2} sx={{ width: 0.5, justifyContent: "center", alignItems: "center", rowGap: 0 }}>
-            {hidden ? 
-              <div className="empty-box">
-                <h1>Guess the Song... <Repeat onClick={() => play()} fontSize="large" sx={{ textShadow: 5, marginLeft: 2 }} /></h1>
-              </div> 
-              : <Video hidden={hidden} url={videoURL} />
+          <Grid container spacing={2} sx={{ width: 1, justifyContent: "center", alignItems: "center"}}>
+            <Grid item xs={10} style={{width: 1}}>
+              {hidden ? 
+                <div className="empty-box">
+                  <h1>Guess the Song... <Repeat onClick={() => playSong()} fontSize="large" sx={{textShadow: 5, marginLeft: 2}} /></h1>
+                </div> 
+                : <Video hidden={hidden} url={videoURL}  />
+              }
+            </Grid>
+
+            {hidden ? null 
+              : <Grid item xs={1} sx={{marginLeft: 1, width: "10px !important"}}>
+                  <Button onClick={nextQuestion} variant="contained" sx={{height: "80px", width: "10px", minWidth: "unset"}}><SkipNext sx={{height: "40px"}}/></Button>
+                  <Button onClick={playSong} variant="contained" sx={{height: "80px", width: "10px", minWidth: "unset", marginTop: 2}}><Repeat sx={{height: "40px"}}/></Button>
+                </Grid>
             }
-            <div className="grid">
+
+            {hidden ? null 
+              : <Box>
+                  <Grid item xs={12} sx={{alignSelf: "start", height: "20px", margin: 0, marginTop: 1}}>
+                    <h1 style={{margin: "0px"}}>{songInfo.property}</h1>
+                  </Grid>
+                  <Grid item xs={12} sx={{height: "14px", margin: 0}}><h2>{songInfo.song_name}</h2></Grid>
+                </Box>
+            }
+
+            <Grid container spacing={1} sx={{ width: 1, marginTop: 3 }}>
               {choices.map((choice, index) => {
-                return <Choice key={index} index={index} id={choice.id} property={choice.property} correct={choice.correct} showAnswer={showAnswer} handleClick={handleClick} />
+                return <Grid item xs={6} sx={{ width: 1, height: 1 }}><Choice key={index} index={index} id={choice.id} property={choice.property} correct={choice.correct} showAnswer={showAnswer} handleClick={handleClick} /></Grid>
               })}
-            </div>
-            {hidden ? null : <Box><Button onClick={nextQuestion} variant="contained" sx={{width: 1}}>Next</Button></Box>}
+            </Grid>
           </Grid>
         </Container>
       </div>
