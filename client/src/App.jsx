@@ -37,6 +37,7 @@ function App() {
   const [choices, setChoices] = useState([{}]);
   const [songInfo, setSongInfo] = useState([{}]);
   const [showAnswer, setShowAnswer] = useState(false);
+  const [score, setScore] = useState(0);
   const [videoURL, setVideoURL] = useState("https://www.youtube.com/watch?v=7U7BDn-gU18");
   const [clickNoise] = useSound(click);
   const [playWin] = useSound(victory);
@@ -82,6 +83,7 @@ function App() {
     fetchData();
     setIntro(false);
     setShowAnswer(false);
+    setScore(0);
   }
 
   function nextQuestion() {
@@ -138,8 +140,10 @@ function App() {
   function handleAnswer(correct) {
     if (correct) {
       playWin();
+      setScore(score + 1);
     } else {
       playLose();
+      setScore(0);
     }
     setShowAnswer(true);
     stop();
@@ -219,6 +223,11 @@ function App() {
         <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2 }}>
           <HomeButton resetGame={resetGame}/>
         </Box>
+
+        <Box sx={{ position: "absolute", top: 0, left: 0, marginTop: 2, marginLeft: 2 }}>
+            <h1 style={{margin: 0}}>Score: {score}</h1>
+        </Box>
+
         <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: 0.8 }} style={{minHeight: "100vh"}}>
           <Grid container spacing={2} sx={{ width: 1, justifyContent: "center", alignItems: "center"}}>
             <Grid item xs={8} style={{width: 1}}>
@@ -230,8 +239,8 @@ function App() {
 
             {hidden ? null 
               : <Grid item xs={1} sx={{marginLeft: 1, width: "10px"}}>
-                  <Button onClick={nextQuestion} variant="contained" sx={{height: "80px", width: "10px", minWidth: "unset"}}><SkipNext sx={{height: "40px"}}/></Button>
-                  <Button onClick={playSong} variant="contained" sx={{height: "80px", width: "10px", minWidth: "unset", marginTop: 2}}><Repeat sx={{height: "40px"}}/></Button>
+                  <Button onClick={nextQuestion} variant="contained" sx={{height: "80px", width: "10px", minWidth: "unset", boxShadow: 10, border: "2px solid antiquewhite"}}><SkipNext sx={{height: "40px"}}/></Button>
+                  <Button onClick={playSong} variant="contained" sx={{height: "80px", width: "10px", minWidth: "unset", marginTop: 2, boxShadow: 10, border: "2px solid antiquewhite"}}><Repeat sx={{height: "40px"}}/></Button>
                 </Grid>
             }
 
