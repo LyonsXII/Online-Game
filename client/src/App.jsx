@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSound } from 'use-sound';
 import axios from "axios";
 
-import { Container, Box, Grid, createTheme } from "@mui/material";
+import { Container, Box, Grid, Typography, createTheme } from "@mui/material";
 import { Repeat } from '@mui/icons-material';
 
 import HomeButton from "./HomeButton";
@@ -131,67 +131,61 @@ function App() {
       },
       secondary: {
         main: "#927fbf"
-      }
+      },
+      typography: {
+        fontFamily: [
+          'Anta',
+          'Roboto'
+        ].join(',')
+      },
     }
   })
 
   if (intro) {
     return (
         <div>
-          <Box sx={{
-              display: "flex", 
-              gap: 1, 
-              justifyContent: "end",
-              marginTop: 2,
-              marginRight: 2
-            }}>
+          <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2 }}>
             <HomeButton resetGame={resetGame}/>
           </Box>
-          <Container>
-            <Box sx={{
-              display: "flex"
-            }}>
-              <Box sx={{
-                  display: "flex", 
-                  flexWrap: "wrap",
-                  height: 1,
-                  width: 0.4,
-                  justifyContent: "center",
-                  marginTop: 1,
-                  gap: 1
-                }}>
-                    <Button onClick={handleCategory} value="Anime" variant="contained" sx={{width: 0.4}}>Anime</Button>
-                    <Button onClick={handleCategory} value="Indie" variant="contained" sx={{width: 0.4}}>Indie</Button>
-                    <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 0.4}}>Games</Button>
-                    <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 0.4}}>Movies</Button>
-                    <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 0.4}}>TV</Button>
-                    <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 0.4}}>Top 40</Button>
-                </Box>
-              <Box sx={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  height: 1,
-                  width: 0.2,
-                  gap: 1, 
-                  justifyContent: "center",
-                  marginTop: 1,
-                  marginRight: 1
-                }}>
-                  <Button onClick={handleDifficulty} value="Easy" variant="contained" sx={{width: 1}}>Easy</Button>
-                  <Button onClick={handleDifficulty} value="Hard" variant="contained" sx={{width: 1}}>Hard</Button>
-                </Box>
-                <Box sx={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  height: 1,
-                  width: 0.2,
-                  gap: 1, 
-                  justifyContent: "center",
-                  marginTop: 1
-                }}>
-                  <Button onClick={startGame} variant="contained" sx={{width: 1}}>Start</Button>
-              </Box>
-            </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center", marginTop: 16}}>
+            <Typography variant="h1" color="antiquewhite" sx={{ textShadow: "4px 4px #000000" }}>Song Guesser</Typography>
+          </Box>
+
+          <Container sx={{ display: "flex", marginTop: 4, width: 0.8 }}>
+            <Grid container spacing={2} sx={{ marginRight: 4, width: 0.5 }}>
+              <Grid item xs={6}>
+                <Button onClick={handleCategory} value="Anime" variant="contained" sx={{width: 1}}>Anime</Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button onClick={handleCategory} value="Indie" variant="contained" sx={{width: 1}}>Indie</Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1}}>Games</Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1}}>Movies</Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1}}>TV</Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1}}>Top 40</Button>
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={2} sx={{ width: 0.5, justifyContent: "center", alignItems: "center" }}>
+              <Grid item xs={6}>
+                <Button onClick={handleDifficulty} value="Easy" variant="contained" sx={{width: 1}}>Easy</Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button onClick={handleDifficulty} value="Hard" variant="contained" sx={{width: 1}}>Hard</Button>
+              </Grid>
+              <Grid item xs={8}>
+                <Button onClick={startGame} variant="contained" sx={{width: 1}}>Start</Button>
+              </Grid>
+
+            </Grid>
           </Container>
         </div>
     )
