@@ -15,8 +15,3 @@ body {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 } */
-
-h1, h2 {
-  color: antiquewhite;
-  text-shadow: 4px 4px #000000;
-}

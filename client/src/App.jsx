@@ -152,7 +152,7 @@ function App() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#4f3b78"
+        main: "#faebd7"
       },
       secondary: {
         main: "#927fbf"
@@ -177,7 +177,7 @@ function App() {
             <Grid container spacing={2} sx={{ width: 1 }}>
 
               <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
-                  <Typography variant="h1" color="antiquewhite" sx={{ textShadow: "4px 4px #000000" }}>Song Guesser</Typography>
+                  <Typography variant="h1" color={theme.palette.primary.main} sx={{ textShadow: "4px 4px #000000" }}>Song Guesser</Typography>
               </Grid>
 
               <Grid container spacing={2} sx={{ marginRight: 4, width: 0.5, marginTop: 2 }}>
@@ -225,14 +225,14 @@ function App() {
         </Box>
 
         <Box sx={{ position: "absolute", top: 0, left: 0, marginTop: 2, marginLeft: 2 }}>
-            <h1 style={{margin: 0}}>Score: {score}</h1>
+            <Typography variant="h4" color={theme.palette.primary.main} sx={{ textShadow: "4px 4px #000000" }}>Score: {score}</Typography>
         </Box>
 
         <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: 0.8 }} style={{minHeight: "100vh"}}>
           <Grid container spacing={2} sx={{ width: 1, justifyContent: "center", alignItems: "center"}}>
             <Grid item xs={8} style={{width: 1}}>
               {hidden ? 
-                <h1>Guess the Song... <Repeat onClick={() => playSong()} fontSize="large" sx={{textShadow: 5, marginLeft: 2}} /></h1>
+                <Typography variant="h4" color={theme.palette.primary.main} sx={{ textShadow: "4px 4px #000000" }}>Guess the Song...<Repeat onClick={() => playSong()} fontSize="large" sx={{textShadow: 5, marginLeft: 2}} /></Typography>
                 : <Box sx={{alignSelf: "start"}}><Video hidden={hidden} url={videoURL}/></Box>
               }
             </Grid>
@@ -246,8 +246,8 @@ function App() {
 
             {hidden ? null 
               : <Grid item xs={12} sx={{display: "flex", justifyContent: "flex-start", alignItems: "end", margin: 0}}>
-                    <Grid item ><h1 style={{margin: 0}}>{songInfo.property}</h1></Grid>
-                    <Grid item ><h2 style={{margin: 0, marginLeft: "20px"}}>{songInfo.song_name}</h2></Grid>
+                    <Grid item ><Typography variant="h4" color={theme.palette.primary.main} sx={{ textShadow: "4px 4px #000000" }}>{songInfo.property}</Typography></Grid>
+                    <Grid item ><Typography variant="h5" color={theme.palette.primary.main} sx={{ marginLeft: 2, textShadow: "4px 4px #000000" }}>{songInfo.song_name}</Typography></Grid>
                 </Grid>
             }
 
