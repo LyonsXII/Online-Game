@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSound } from 'use-sound';
 import axios from "axios";
 
@@ -45,6 +45,7 @@ function App() {
   const [selectedSong, setSelectedSong] = useState(myAudio);
   const [play, { stop }] = useSound(selectedSong);
   const [playing, setPlaying] = useState(false);
+  const [excluded, setExcluded] = useState([]);
 
   // Fetch options from database
   async function fetchData() {
@@ -61,22 +62,34 @@ function App() {
   
       return array;
     }
+
     try {
       // Post request to backend
-      const postData = {"category": category, "difficulty": difficulty};
+      if (excluded == [undefined]) {
+        const postData = {"category": category, "difficulty": difficulty, "excluded": []};
+      }
+      const postData = {"category": category, "difficulty": difficulty, "excluded": excluded};
       const response = await axios.post('/choices', postData);
 
       // Setting retrieved data
-      setVideoURL(response.data[0].video_link);
-      setSelectedSong(audioFiles[response.data[0].location]);
       const data = response.data[0];
-      setSongInfo({property: data.property, song_name: data.song_name, difficulty: data.difficulty});
+      setVideoURL(data.video_link);
+      setSelectedSong(audioFiles[data.location]);
+      setSongInfo({id: data.id, property: data.property, song_name: data.song_name, difficulty: data.difficulty});
       const shuffledChoices = shuffle(response.data);
       setChoices(shuffledChoices);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
+
+  useEffect(() => {
+    setExcluded((prev) => prev === undefined ? [...prev, songInfo.id] : [songInfo.id]);
+  }, [songInfo]);
+
+  useEffect(() => {
+    console.log("excluded", excluded);
+  }, [excluded]);
 
   function startGame() {
     clickNoise();
@@ -111,11 +124,10 @@ function App() {
     setDifficulty(difficulty);
   }
 
-
   let songTimeout;
   function playSong() {
     let delayTime;
-    if (songInfo.difficulty == "Easy") {delayTime = 10000} else {delayTime = 5000}
+    if (songInfo.difficulty === "Easy") {delayTime = 10000} else {delayTime = 5000}
     clearTimeout(songTimeout);
     if (playing === true) {
       stop();

@@ -23,14 +23,35 @@ app.use(express.static("public"));
 app.post("/choices", async (req, res) => {
   const difficulty = req.body.difficulty;
   const category = req.body.category;
+  let excluded = req.body.excluded[0] === null ? req.body.excluded : [];
+  if (req.body.excluded[0] === null) {excluded = [];}
+  const excludedString = excluded.length > 0 ? excluded.join(',') : undefined;
+  console.log(excluded);
   let choices = {};
 
   try {
-    choices = await db.query("SELECT id, property FROM songs WHERE difficulty=$1 AND category=$2 ORDER BY RANDOM() LIMIT 4", [difficulty, category]);
+    let query = `
+      SELECT id, property 
+      FROM songs 
+      WHERE difficulty = $1 
+      AND category = $2 
+    `;
+
+    if (excludedString != undefined && excluded.length > 0) {
+      query += `AND id NOT IN (${excluded.map((_, index) => '$' + (index + 3)).join(',')})`;
+    }
+
+    query += `
+      ORDER BY RANDOM() 
+      LIMIT 4`;
+
+    const params = [difficulty, category, ...excluded];
+    choices = await db.query(query, params);
+    console.log(choices.rows);
     choices = choices.rows;
 
   } catch(err) {
-    console.log(err)
+    console.log(err);
   }
 
   try {
