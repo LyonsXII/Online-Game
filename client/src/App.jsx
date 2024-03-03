@@ -188,7 +188,7 @@ function App() {
                   <Button onClick={handleCategory} value="Indie" variant="contained" sx={{width: 1}}>Indie</Button>
                 </Grid>
                 <Grid item xs={6}>
-                  <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1}}>Games</Button>
+                  <Button onClick={handleCategory} value="Video Games" variant="contained" sx={{width: 1}}>Video Games</Button>
                 </Grid>
                 <Grid item xs={6}>
                   <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1 }}>Movies</Button>
