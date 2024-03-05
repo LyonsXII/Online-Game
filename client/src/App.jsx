@@ -87,9 +87,7 @@ function App() {
     setExcluded((prev) => prev === undefined ? [...prev, songInfo.id] : [songInfo.id]);
   }, [songInfo]);
 
-  useEffect(() => {
-    console.log("excluded", excluded);
-  }, [excluded]);
+  useEffect(() => {console.log("excluded", excluded);}, [excluded]);
 
   function startGame() {
     clickNoise();
