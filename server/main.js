@@ -47,7 +47,6 @@ app.post("/choices", async (req, res) => {
 
     const params = [difficulty, category, ...excluded];
     choices = await db.query(query, params);
-    console.log(choices.rows);
     choices = choices.rows;
 
   } catch(err) {
