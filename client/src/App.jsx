@@ -75,6 +75,7 @@ function App() {
       const data = response.data[0];
       setVideoURL(data.video_link);
       setSelectedSong(audioFiles[data.location]);
+      setExcluded((prev) => [...prev, data.id]);
       setSongInfo({id: data.id, property: data.property, song_name: data.song_name, difficulty: data.difficulty});
       const shuffledChoices = shuffle(response.data);
       setChoices(shuffledChoices);
@@ -83,11 +84,6 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    setExcluded((prev) => prev === undefined ? [...prev, songInfo.id] : [songInfo.id]);
-  }, [songInfo]);
-
-  useEffect(() => {console.log("excluded", excluded);}, [excluded]);
 
   function startGame() {
     clickNoise();

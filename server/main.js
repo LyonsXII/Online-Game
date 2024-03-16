@@ -23,8 +23,8 @@ app.use(express.static("public"));
 app.post("/choices", async (req, res) => {
   const difficulty = req.body.difficulty;
   const category = req.body.category;
-  let excluded = req.body.excluded[0] === null ? req.body.excluded : [];
-  if (req.body.excluded[0] === null) {excluded = [];}
+  let excluded = req.body.excluded[0] != null ? req.body.excluded : [];
+  // if (req.body.excluded[0] === null) {excluded = [];}
   const excludedString = excluded.length > 0 ? excluded.join(',') : undefined;
   console.log(excluded);
   let choices = {};
@@ -62,7 +62,7 @@ app.post("/choices", async (req, res) => {
   }
 
   choices[0]["correct"] = true;
-  for (let i = 1; i < 4; i++) {choices[i]["correct"] = false;}
+  for (let i = 1; i < choices.length; i++) {choices[i]["correct"] = false;}
   res.json(choices)
 });
 
