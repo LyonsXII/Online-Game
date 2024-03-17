@@ -35,7 +35,9 @@ function App() {
   const [difficulty, setDifficulty] = useState("Hard");
   const [category, setCategory] = useState("Anime");
   const [choices, setChoices] = useState([{}]);
+  const [numQuestions, setNumQuestions] = useState(0);
   const [songInfo, setSongInfo] = useState([{}]);
+  const [excluded, setExcluded] = useState([]);
   const [showAnswer, setShowAnswer] = useState(false);
   const [score, setScore] = useState(0);
   const [videoURL, setVideoURL] = useState("https://www.youtube.com/watch?v=7U7BDn-gU18");
@@ -45,7 +47,13 @@ function App() {
   const [selectedSong, setSelectedSong] = useState(myAudio);
   const [play, { stop }] = useSound(selectedSong);
   const [playing, setPlaying] = useState(false);
-  const [excluded, setExcluded] = useState([]);
+
+
+  async function getNumQuestions() {
+    const postData = {"category": category, "difficulty": difficulty};
+    const response = await axios.post('/numQuestions', postData);
+    setNumQuestions(response.data[0]["count"]);
+  }
 
   // Fetch options from database
   async function fetchData() {
@@ -87,10 +95,13 @@ function App() {
 
   function startGame() {
     clickNoise();
+    getNumQuestions();
     fetchData();
     setIntro(false);
     setShowAnswer(false);
     setScore(0);
+    setExcluded([]);
+    // Insert db call here to query how many rows total
   }
 
   function nextQuestion() {
@@ -231,7 +242,7 @@ function App() {
         </Box>
 
         <Box sx={{ position: "absolute", top: 0, left: 0, marginTop: 2, marginLeft: 2 }}>
-            <Typography variant="h4" color={theme.palette.primary.main} sx={{ textShadow: "4px 4px #000000" }}>Score: {score}</Typography>
+            <Typography variant="h4" color={theme.palette.primary.main} sx={{ textShadow: "4px 4px #000000" }}>Score: {score}/{numQuestions}</Typography>
         </Box>
 
         <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: 0.8 }} style={{minHeight: "100vh"}}>

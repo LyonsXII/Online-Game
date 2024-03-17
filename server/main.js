@@ -20,15 +20,21 @@ db.connect();
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
+app.post("/numQuestions", async (req, res) => {
+  const difficulty = req.body.difficulty;
+  const category = req.body.category;
+  const numQuestions = await db.query("SELECT COUNT(id) FROM songs WHERE difficulty = $1 AND category = $2", [difficulty, category]);
+  res.json(numQuestions.rows);
+});
+
 app.post("/choices", async (req, res) => {
   const difficulty = req.body.difficulty;
   const category = req.body.category;
   let excluded = req.body.excluded[0] != null ? req.body.excluded : [];
-  // if (req.body.excluded[0] === null) {excluded = [];}
   const excludedString = excluded.length > 0 ? excluded.join(',') : undefined;
-  console.log(excluded);
   let choices = {};
 
+  // Pulling four random choices from database, excluding previous answers
   try {
     let query = `
       SELECT id, property 
@@ -53,6 +59,7 @@ app.post("/choices", async (req, res) => {
     console.log(err);
   }
 
+  // Pulling expanded data for correct choice
   try {
     choices[0] = await db.query("SELECT * FROM songs WHERE id=$1", [choices[0].id]);
     choices[0] = choices[0].rows[0];
@@ -61,6 +68,7 @@ app.post("/choices", async (req, res) => {
     console.log(err)
   }
 
+  // Adding correct / false to choices
   choices[0]["correct"] = true;
   for (let i = 1; i < choices.length; i++) {choices[i]["correct"] = false;}
   res.json(choices)
