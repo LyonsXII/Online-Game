@@ -48,7 +48,7 @@ function App() {
   const [play, { stop }] = useSound(selectedSong);
   const [playing, setPlaying] = useState(false);
 
-
+  // Fetch number of possible questions for category from database
   async function getNumQuestions() {
     const postData = {"category": category, "difficulty": difficulty};
     const response = await axios.post('/numQuestions', postData);
@@ -242,13 +242,13 @@ function App() {
         </Box>
 
         <Box sx={{ position: "absolute", top: 0, left: 0, marginTop: 2, marginLeft: 2 }}>
-            <Typography variant="h4" color={theme.palette.primary.main} sx={{ textShadow: "4px 4px #000000" }}>Score: {score}/{numQuestions}</Typography>
+            <Typography variant="h4" color={theme.palette.primary.main} sx={{ textShadow: "4px 4px #000000" }}>Score: {score}/{numQuestions - 3}</Typography>
         </Box>
 
-        <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: 0.8 }} style={{minHeight: "100vh"}}>
+        <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: 0.8 }} style={{minHeight: "100vh", maxWidth: "2000px"}}>
           <Grid container spacing={2} sx={{ width: 1, justifyContent: "center", alignItems: "center"}}>
             <Grid item xs={8} style={{width: 1}}>
-              {hidden ? 
+              {hidden ?
                 <Typography variant="h4" color={theme.palette.primary.main} sx={{ textShadow: "4px 4px #000000" }}>Guess the Song...<Repeat onClick={() => playSong()} fontSize="large" sx={{textShadow: 5, marginLeft: 2}} /></Typography>
                 : <Box sx={{alignSelf: "start"}}><Video hidden={hidden} url={videoURL}/></Box>
               }
