@@ -250,7 +250,9 @@ function App() {
             <Grid item xs={8} style={{width: 1}}>
               {hidden ?
                 <Typography variant="h4" color={theme.palette.primary.main} sx={{ textShadow: "4px 4px #000000" }}>Guess the Song...<Repeat onClick={() => playSong()} fontSize="large" sx={{textShadow: 5, marginLeft: 2}} /></Typography>
-                : <Box sx={{alignSelf: "start"}}><Video hidden={hidden} url={videoURL}/></Box>
+                : <Box sx={{alignSelf: "start"}}>
+                    <Video hidden={hidden} url={videoURL}/>
+                  </Box>
               }
             </Grid>
 
