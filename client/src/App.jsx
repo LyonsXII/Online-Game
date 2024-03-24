@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useSound } from 'use-sound';
 import axios from "axios";
 
-import { Container, Box, Grid, Typography, createTheme } from "@mui/material";
+import { Container, Box, Grid, Typography, createTheme, ThemeProvider } from "@mui/material";
 import { Repeat } from '@mui/icons-material';
 import { SkipNext } from '@mui/icons-material';
 
 import HomeButton from "./HomeButton";
+import ToggleTheme from "./ToggleTheme";
 import Video from "./Video";
 import Choice from "./Choice"
 import Button from '@mui/material/Button';
@@ -34,6 +35,7 @@ function App() {
   const [intro, setIntro] = useState(true);
   const [difficulty, setDifficulty] = useState("Hard");
   const [category, setCategory] = useState("Anime");
+
   const [choices, setChoices] = useState([{}]);
   const [numQuestions, setNumQuestions] = useState(0);
   const [songInfo, setSongInfo] = useState([{}]);
@@ -41,12 +43,15 @@ function App() {
   const [showAnswer, setShowAnswer] = useState(false);
   const [score, setScore] = useState(0);
   const [videoURL, setVideoURL] = useState("https://www.youtube.com/watch?v=7U7BDn-gU18");
+
   const [clickNoise] = useSound(click);
   const [playWin] = useSound(victory);
   const [playLose] = useSound(defeat);
   const [selectedSong, setSelectedSong] = useState(myAudio);
   const [play, { stop }] = useSound(selectedSong);
   const [playing, setPlaying] = useState(false);
+
+  const [currTheme, setCurrTheme] = useState(0);
 
   // Fetch number of possible questions for category from database
   async function getNumQuestions() {
@@ -166,7 +171,20 @@ function App() {
     stop();
   }
 
-  const theme = createTheme({
+  function toggleTheme() {
+    setCurrTheme((currTheme + 1) % 2);
+    if (currTheme == 0) {
+      theme.palette.primary.main = "#b31712";
+      document.body.style.backgroundImage = "url('https://www.transparenttextures.com/patterns/3px-tile.png')";
+      document.body.style.backgroundColor = "#146e00";
+    } else if (currTheme == 1) {
+      theme.palette.primary.main = "#faebd7";
+      document.body.style.backgroundImage = "url('https://www.transparenttextures.com/patterns/cubes.png')";
+      document.body.style.backgroundColor = "#3b006e";
+    }
+  }
+
+  let theme = createTheme({
     palette: {
       primary: {
         main: "#faebd7"
@@ -186,8 +204,12 @@ function App() {
   if (intro) {
     return (
         <div>
-          <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2 }}>
+          <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2, display: "flex", flexDirection: "column", gap: 1}}>
             <HomeButton resetGame={resetGame}/>
+            <ToggleTheme toggleTheme={toggleTheme}/>
+          </Box>
+          <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2 }}>
+            
           </Box>
 
           <Container sx={{ display: "flex", width: 0.8, justifyContent: "center", alignItems: "center" }} style={{ minHeight: "100vh" }}>
