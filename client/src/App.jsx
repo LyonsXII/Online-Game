@@ -172,25 +172,27 @@ function App() {
   }
 
   function toggleTheme() {
-    setCurrTheme((currTheme + 1) % 2);
-    if (currTheme == 0) {
-      theme.palette.primary.main = "#b31712";
-      document.body.style.backgroundImage = "url('https://www.transparenttextures.com/patterns/3px-tile.png')";
-      document.body.style.backgroundColor = "#146e00";
-    } else if (currTheme == 1) {
-      theme.palette.primary.main = "#faebd7";
+    setCurrTheme((prevTheme) => (prevTheme + 1) % themes.length);
+    
+    if ((currTheme + 1) % themes.length === 0) {
       document.body.style.backgroundImage = "url('https://www.transparenttextures.com/patterns/cubes.png')";
       document.body.style.backgroundColor = "#3b006e";
+    } else if ((currTheme + 1) % themes.length === 1) {
+      document.body.style.backgroundImage = "url('https://www.transparenttextures.com/patterns/batthern.png')";
+      document.body.style.backgroundColor = "#146e00";
+    } else if ((currTheme + 1) % themes.length === 2) {
+      document.body.style.backgroundImage = "url('https://www.transparenttextures.com/patterns/dark-wood.png')";
+      document.body.style.backgroundColor = "#592500";
     }
   }
 
-  let theme = createTheme({
+  let themes = [createTheme({
     palette: {
       primary: {
-        main: "#faebd7"
+        main: "#393db3"
       },
       secondary: {
-        main: "#927fbf"
+        main: "#faebd7"
       },
       typography: {
         fontFamily: [
@@ -199,11 +201,43 @@ function App() {
         ].join(',')
       },
     }
-  })
+  }),
+  createTheme({
+    palette: {
+      primary: {
+        main: "#32ab50"
+      },
+      secondary: {
+        main: "#faebd7"
+      },
+      typography: {
+        fontFamily: [
+          'Anta',
+          'Roboto'
+        ].join(',')
+      },
+    }
+  }),
+  createTheme({
+    palette: {
+      primary: {
+        main: "#db9c5c"
+      },
+      secondary: {
+        main: "#faebd7"
+      },
+      typography: {
+        fontFamily: [
+          'Anta',
+          'Roboto'
+        ].join(',')
+      },
+    }
+  })];
 
   if (intro) {
     return (
-        <div>
+        <ThemeProvider theme={themes[currTheme]}>
           <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2, display: "flex", flexDirection: "column", gap: 1}}>
             <HomeButton resetGame={resetGame}/>
             <ToggleTheme toggleTheme={toggleTheme}/>
@@ -216,7 +250,7 @@ function App() {
             <Grid container spacing={2} sx={{ width: 1 }}>
 
               <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
-                  <Typography variant="h1" color={theme.palette.primary.main} sx={{ textShadow: "4px 4px #000000" }}>Song Guesser</Typography>
+                  <Typography variant="h1" color={themes[currTheme].palette.secondary.main} sx={{ textShadow: "4px 4px #000000" }}>Song Guesser</Typography>
               </Grid>
 
               <Grid container spacing={2} sx={{ marginRight: 4, width: 0.5, marginTop: 2 }}>
@@ -254,24 +288,24 @@ function App() {
 
             </Grid>
           </Container>
-        </div>
+        </ThemeProvider>
     )
   } else {
     return (
-      <div>
+      <ThemeProvider theme={themes[currTheme]}>
         <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2 }}>
           <HomeButton resetGame={resetGame}/>
         </Box>
 
         <Box sx={{ position: "absolute", top: 0, left: 0, marginTop: 2, marginLeft: 2 }}>
-            <Typography variant="h4" color={theme.palette.primary.main} sx={{ textShadow: "4px 4px #000000" }}>Score: {score}/{numQuestions - 3}</Typography>
+            <Typography variant="h4" color={themes[currTheme].palette.secondary.main} sx={{ textShadow: "4px 4px #000000" }}>Score: {score}/{numQuestions - 3}</Typography>
         </Box>
 
         <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: 0.8 }} style={{minHeight: "100vh", maxWidth: "2000px"}}>
           <Grid container spacing={2} sx={{ width: 1, justifyContent: "center", alignItems: "center"}}>
             <Grid item xs={8} style={{width: 1}}>
               {hidden ?
-                <Typography variant="h4" color={theme.palette.primary.main} sx={{ textShadow: "4px 4px #000000" }}>Guess the Song...<Repeat onClick={() => playSong()} fontSize="large" sx={{textShadow: 5, marginLeft: 2}} /></Typography>
+                <Typography variant="h4" color={themes[currTheme].palette.secondary.main} sx={{ textShadow: "4px 4px #000000" }}>Guess the Song...<Repeat onClick={() => playSong()} fontSize="large" sx={{textShadow: 5, marginLeft: 2}} /></Typography>
                 : <Box sx={{alignSelf: "start"}}>
                     <Video hidden={hidden} url={videoURL}/>
                   </Box>
@@ -287,8 +321,8 @@ function App() {
 
             {hidden ? null 
               : <Grid item xs={12} sx={{display: "flex", justifyContent: "flex-start", alignItems: "end", margin: 0}}>
-                    <Grid item ><Typography variant="h4" color={theme.palette.primary.main} sx={{ textShadow: "4px 4px #000000" }}>{songInfo.property}</Typography></Grid>
-                    <Grid item ><Typography variant="h5" color={theme.palette.primary.main} sx={{ marginLeft: 2, textShadow: "4px 4px #000000" }}>{songInfo.song_name}</Typography></Grid>
+                    <Grid item ><Typography variant="h4" color={themes[currTheme].palette.secondary.main} sx={{ textShadow: "4px 4px #000000" }}>{songInfo.property}</Typography></Grid>
+                    <Grid item ><Typography variant="h5" color={themes[currTheme].palette.secondary.main} sx={{ marginLeft: 2, textShadow: "4px 4px #000000" }}>{songInfo.song_name}</Typography></Grid>
                 </Grid>
             }
 
@@ -301,7 +335,7 @@ function App() {
             </Grid>
           </Grid>
         </Container>
-      </div>
+      </ThemeProvider>
     )
   }
 }
