@@ -304,30 +304,33 @@ function App() {
         <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2, display: "flex", flexDirection: "column", gap: 1 }}>
           <HomeButton resetGame={resetGame}/>
           <ToggleTheme toggleTheme={toggleTheme}/>
-          {<CardMedia component="audio" controls src={pipelineAudioFile}/>}
         </Box>
 
         <Box sx={{ position: "absolute", top: 0, left: 0, marginTop: 2, marginLeft: 2 }}>
             <Typography variant="h4" color={themes[currTheme].palette.secondary.main} sx={{ textShadow: "4px 4px #000000" }}>Score: {score}/{numQuestions - 3}</Typography>
         </Box>
 
-        <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: 0.8 }} style={{minHeight: "100vh", maxWidth: "2000px"}}>
+        <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: 0.8, minHeight: "100vh", maxWidth: "2000px", marginTop: 2 }} >
           <Grid container spacing={2} sx={{ width: 1, justifyContent: "center", alignItems: "center"}}>
-            <Grid item xs={8} style={{width: 1}}>
+            <Grid item xs={12} style={{width: 1}}>
               {hidden ?
-                <Typography variant="h4" color={themes[currTheme].palette.secondary.main} sx={{ textShadow: "4px 4px #000000" }}>Guess the Song...<Repeat onClick={() => playSong()} fontSize="large" sx={{textShadow: 5, marginLeft: 2}} /></Typography>
-                : <Box sx={{alignSelf: "start"}}>
-                    <Video hidden={hidden} url={videoURL}/>
+                <Box sx={{ display: "flex", width: "100%" }}>
+                  <Typography variant="h4" color={themes[currTheme].palette.secondary.main} sx={{ width: "60%", textShadow: "4px 4px #000000" }}>Guess the Song...</Typography>
+                  <CardMedia component="audio" controls src={pipelineAudioFile}
+                    sx={{width: "100%", boxShadow: 10, borderRadius: "10px", border: "2px solid antiquewhite"}}
+                  />
+                </Box>
+                : <Box sx={{ display: "flex", width: "100%" }}>
+                    <Grid item xs={10} sx={{width: "80%", alignSelf: "start"}}>
+                      <Video hidden={hidden} url={videoURL}/>
+                    </Grid>
+                    <Grid item xs={1} sx={{ marginLeft: 3, width: "10px"}}>
+                      <Button onClick={nextQuestion} variant="contained" sx={{height: "80px", width: "10px", minWidth: "unset", boxShadow: 10, border: "2px solid antiquewhite"}}><SkipNext sx={{height: "40px"}}/></Button>
+                      <Button onClick={playSong} variant="contained" sx={{height: "80px", width: "10px", minWidth: "unset", marginTop: 2, boxShadow: 10, border: "2px solid antiquewhite"}}><Repeat sx={{height: "40px"}}/></Button>
+                    </Grid>
                   </Box>
               }
             </Grid>
-
-            {hidden ? null 
-              : <Grid item xs={1} sx={{marginLeft: 1, width: "10px"}}>
-                  <Button onClick={nextQuestion} variant="contained" sx={{height: "80px", width: "10px", minWidth: "unset", boxShadow: 10, border: "2px solid antiquewhite"}}><SkipNext sx={{height: "40px"}}/></Button>
-                  <Button onClick={playSong} variant="contained" sx={{height: "80px", width: "10px", minWidth: "unset", marginTop: 2, boxShadow: 10, border: "2px solid antiquewhite"}}><Repeat sx={{height: "40px"}}/></Button>
-                </Grid>
-            }
 
             {hidden ? null 
               : <Grid item xs={12} sx={{display: "flex", justifyContent: "flex-start", alignItems: "end", margin: 0}}>
