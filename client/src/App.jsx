@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSound } from 'use-sound';
 import axios from "axios";
 
-import { Container, Box, Grid, Typography, createTheme, ThemeProvider } from "@mui/material";
+import { Container, Box, Grid, Typography, CardMedia, createTheme, ThemeProvider } from "@mui/material";
 import { Repeat } from '@mui/icons-material';
 import { SkipNext } from '@mui/icons-material';
 
@@ -16,19 +16,6 @@ import myAudio from "./music/anime/Angel Beats OP1 - Easy.mp3";
 import click from "./music/misc/Click.mp3";
 import victory from "./music/misc/Victory.mp3";
 import defeat from "./music/misc/Defeat.mp3";
-
-// Import all mp3 files located inside src/music
-// Files can be accessed via format audioFiles["music/anime/AngelBeats OP1 - Easy"]
-const importAll = (context) => {
-  let audioFiles = {};
-  context.keys().forEach((filename) => {
-    const audioName = filename.replace("./", "").replace(".mp3", "");
-    audioFiles[audioName] = context(filename);
-  });
-  return audioFiles;
-};
-const audioContext = require.context("./", true, /\.mp3$/);
-const audioFiles = importAll(audioContext);
 
 function App() {
   const [hidden, setHidden] = useState(true);
@@ -50,6 +37,9 @@ function App() {
   const [selectedSong, setSelectedSong] = useState(myAudio);
   const [play, { stop }] = useSound(selectedSong);
   const [playing, setPlaying] = useState(false);
+
+  const [songFilePath, setSongFilePath] = useState("");
+  const [pipelineAudioFile, setPipelineAudioFile] = useState(null);
 
   const [currTheme, setCurrTheme] = useState(0);
 
@@ -79,24 +69,43 @@ function App() {
     try {
       // Post request to backend
       if (excluded == [undefined]) {
-        const postData = {"category": category, "difficulty": difficulty, "excluded": []};
+        const choicesPostData = {"category": category, "difficulty": difficulty, "excluded": []};
       }
-      const postData = {"category": category, "difficulty": difficulty, "excluded": excluded};
-      const response = await axios.post('/choices', postData);
+      const choicesPostData = {"category": category, "difficulty": difficulty, "excluded": excluded};
+      const response = await axios.post('/choices', choicesPostData);
 
       // Setting retrieved data
       const data = response.data[0];
       setVideoURL(data.video_link);
-      setSelectedSong(audioFiles[data.location]);
+      setSongFilePath(data.location);
       setExcluded((prev) => [...prev, data.id]);
       setSongInfo({id: data.id, property: data.property, song_name: data.song_name, difficulty: data.difficulty});
       const shuffledChoices = shuffle(response.data);
       setChoices(shuffledChoices);
+      
     } catch (error) {
       console.error('Error fetching data:', error);
     }
+
   };
 
+  // Fetch .mp3 from backend
+  async function getAudio() {
+    const songPostData = {"location": songFilePath};
+    console.log("axios", songPostData);
+    const songData = await axios.post('/mp3', songPostData, {responseType: "blob"});
+    return songData.data
+  }
+
+  useEffect(() => {
+      const fetchAudio = async () => {
+        const audio = await getAudio();
+        const url = URL.createObjectURL(audio);
+        setPipelineAudioFile(url);
+      };
+  
+    fetchAudio();
+   }, [songFilePath]);
 
   function startGame() {
     clickNoise();
@@ -106,7 +115,6 @@ function App() {
     setShowAnswer(false);
     setScore(0);
     setExcluded([]);
-    // Insert db call here to query how many rows total
   }
 
   function nextQuestion() {
@@ -173,7 +181,7 @@ function App() {
 
   function toggleTheme() {
     setCurrTheme((prevTheme) => (prevTheme + 1) % themes.length);
-    
+
     if ((currTheme + 1) % themes.length === 0) {
       document.body.style.backgroundImage = "url('https://www.transparenttextures.com/patterns/cubes.png')";
       document.body.style.backgroundColor = "#3b006e";
@@ -238,7 +246,7 @@ function App() {
   if (intro) {
     return (
         <ThemeProvider theme={themes[currTheme]}>
-          <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2, display: "flex", flexDirection: "column", gap: 1}}>
+          <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2, display: "flex", flexDirection: "column", gap: 1 }}>
             <HomeButton resetGame={resetGame}/>
             <ToggleTheme toggleTheme={toggleTheme}/>
           </Box>
@@ -293,8 +301,10 @@ function App() {
   } else {
     return (
       <ThemeProvider theme={themes[currTheme]}>
-        <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2 }}>
+        <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2, display: "flex", flexDirection: "column", gap: 1 }}>
           <HomeButton resetGame={resetGame}/>
+          <ToggleTheme toggleTheme={toggleTheme}/>
+          {<CardMedia component="audio" controls src={pipelineAudioFile}/>}
         </Box>
 
         <Box sx={{ position: "absolute", top: 0, left: 0, marginTop: 2, marginLeft: 2 }}>

@@ -1,4 +1,6 @@
 import express from "express";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 import bodyParser from "body-parser";
 import pg from "pg";
 import env from "dotenv";
@@ -6,6 +8,8 @@ import env from "dotenv";
 const app = express();
 const port = 5000;
 env.config();
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const db = new pg.Client({
   user: "postgres",
@@ -72,6 +76,12 @@ app.post("/choices", async (req, res) => {
   choices[0]["correct"] = true;
   for (let i = 1; i < choices.length; i++) {choices[i]["correct"] = false;}
   res.json(choices)
+});
+
+app.post("/mp3", async (req, res) => {
+  const location = req.body.location;
+  const filePath = __dirname + "\\public\\" + location;
+  res.sendFile(filePath);
 });
 
 app.listen(port, () => {
