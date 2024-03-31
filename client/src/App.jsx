@@ -12,7 +12,6 @@ import Video from "./Video";
 import Choice from "./Choice"
 import Button from '@mui/material/Button';
 
-import myAudio from "./music/anime/Angel Beats OP1 - Easy.mp3";
 import click from "./music/misc/Click.mp3";
 import victory from "./music/misc/Victory.mp3";
 import defeat from "./music/misc/Defeat.mp3";
@@ -34,9 +33,6 @@ function App() {
   const [clickNoise] = useSound(click);
   const [playWin] = useSound(victory);
   const [playLose] = useSound(defeat);
-  const [selectedSong, setSelectedSong] = useState(myAudio);
-  const [play, { stop }] = useSound(selectedSong);
-  const [playing, setPlaying] = useState(false);
 
   const [songFilePath, setSongFilePath] = useState("");
   const [pipelineAudioFile, setPipelineAudioFile] = useState(null);
@@ -89,7 +85,7 @@ function App() {
 
   };
 
-  // Fetch .mp3 from backend
+  // Fetch chosen .mp3 from backend
   async function getAudio() {
     const songPostData = {"location": songFilePath};
     console.log("axios", songPostData);
@@ -142,21 +138,6 @@ function App() {
     setDifficulty(difficulty);
   }
 
-  let songTimeout;
-  function playSong() {
-    let delayTime;
-    if (songInfo.difficulty === "Easy") {delayTime = 10000} else {delayTime = 5000}
-    clearTimeout(songTimeout);
-    if (playing === true) {
-      stop();
-      setPlaying(false);
-    } else {
-      play();
-      setPlaying(true);
-      songTimeout = setTimeout(() => {setPlaying(false);}, delayTime);
-    }
-  }
-
   function toggleVideo() {
     hidden ? setHidden(false) : setHidden(true);
   }
@@ -176,7 +157,6 @@ function App() {
       setScore(0);
     }
     setShowAnswer(true);
-    stop();
   }
 
   function toggleTheme() {
@@ -326,7 +306,7 @@ function App() {
                     </Grid>
                     <Grid item xs={1} sx={{ marginLeft: 3, width: "10px"}}>
                       <Button onClick={nextQuestion} variant="contained" sx={{height: "80px", width: "10px", minWidth: "unset", boxShadow: 10, border: "2px solid antiquewhite"}}><SkipNext sx={{height: "40px"}}/></Button>
-                      <Button onClick={playSong} variant="contained" sx={{height: "80px", width: "10px", minWidth: "unset", marginTop: 2, boxShadow: 10, border: "2px solid antiquewhite"}}><Repeat sx={{height: "40px"}}/></Button>
+                      <Button onClick={null} variant="contained" sx={{height: "80px", width: "10px", minWidth: "unset", marginTop: 2, boxShadow: 10, border: "2px solid antiquewhite"}}><Repeat sx={{height: "40px"}}/></Button>
                     </Grid>
                   </Box>
               }
