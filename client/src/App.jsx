@@ -36,6 +36,8 @@ function App() {
 
   const [songFilePath, setSongFilePath] = useState("");
   const [pipelineAudioFile, setPipelineAudioFile] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = React.useRef(null);
 
   const [currTheme, setCurrTheme] = useState(0);
 
@@ -148,6 +150,8 @@ function App() {
     clickNoise();
     handleAnswer(correct);
     toggleVideo();
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
   }
 
   function handleAnswer(correct) {
@@ -159,6 +163,16 @@ function App() {
       setScore(0);
     }
     setShowAnswer(true);
+  }
+
+  function toggleAudioPlayback() {
+    if (!isPlaying) {
+      audioRef.current.play();
+    } else {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    setIsPlaying(!isPlaying);
   }
 
   function toggleTheme() {
@@ -308,40 +322,40 @@ function App() {
             <Typography variant="h2" color={themes[currTheme].palette.secondary.main} sx={{ textShadow: "4px 4px #000000" }}>Score: {score}/{numQuestions - 3}</Typography>
         </Box>
 
-        <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "98vw", minHeight: "98vh", marginTop: 2, '&.MuiContainer-root': {maxWidth: 'unset'} }}>
+        <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: 0.7, minHeight: "98vh", marginTop: 2, '&.MuiContainer-root': {maxWidth: 'unset'} }}>
           <Grid container spacing={2} sx={{ width: 1, justifyContent: "center", alignItems: "center"}}>
-            <Grid item xs={12} style={{width: 1}}>
+            <CardMedia component="audio" ref={audioRef} style={{display: "none"}} src={pipelineAudioFile}
+              sx={{height: "100%", width: "100%", boxShadow: 10, borderRadius: "10px", border: "2px solid antiquewhite"}}
+            />
+            <Grid item xs={12} style={{width: 0.7}}>
               {hidden ?
                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
                   <Typography variant="h1" color={themes[currTheme].palette.secondary.main} 
                     sx={{ width: "100%", textShadow: "4px 4px #000000", marginRight: "0px", textAlign: "center"}}>
                     Guess the Song...
-                    <Repeat sx={{height: "100px", width: "100px", marginLeft: 4}}></Repeat>
+                    <Repeat onClick={toggleAudioPlayback} sx={{height: "100px", width: "100px", marginLeft: 4}}></Repeat>
                   </Typography>
-                  <CardMedia component="audio" controls style={{display: "none"}} src={pipelineAudioFile}
-                    sx={{height: "100%", width: "100%", boxShadow: 10, borderRadius: "10px", border: "2px solid antiquewhite"}}
-                  />
                 </Box>
-                : <Box sx={{ display: "flex", width: "100%" }}>
-                    <Grid item xs={11} sx={{width: "100%", alignSelf: "start"}}>
+                : <Box sx={{ display: "flex", justifyContent: "center", width: 1 }}>
+                    <Grid item xs={11} >
                       <Video hidden={hidden} url={videoURL}/>
                     </Grid>
-                    <Grid item xs={1} sx={{ marginLeft: 3, width: "100%"}}>
-                      <Button onClick={nextQuestion} variant="contained" sx={{height: "80px", width: "10px", minWidth: "unset", boxShadow: 10, border: "2px solid antiquewhite"}}><SkipNext sx={{height: "40px"}}/></Button>
-                      <Button onClick={null} variant="contained" sx={{height: "80px", width: "10px", minWidth: "unset", marginTop: 2, boxShadow: 10, border: "2px solid antiquewhite"}}><Repeat sx={{height: "40px"}}/></Button>
+                    <Grid item xs={1} sx={{ marginLeft: 0, width: "100%"}}>
+                      <Button onClick={nextQuestion} variant="contained" sx={{height: "20vh", width: "100%", minWidth: "unset", boxShadow: 10, border: "2px solid antiquewhite", marginLeft: 2 + "8px"}}><SkipNext sx={{height: "40px"}}/></Button>
+                      <Button onClick={null} variant="contained" sx={{height: "20vh", width: "100%", minWidth: "unset", marginTop: 2, boxShadow: 10, border: "2px solid antiquewhite", marginLeft: 2 + "8px"}}><Repeat onClick={toggleAudioPlayback} sx={{height: "40px"}}/></Button>
                     </Grid>
                   </Box>
               }
             </Grid>
 
             {hidden ? null 
-              : <Grid item xs={12} sx={{display: "flex", justifyContent: "flex-start", alignItems: "end", margin: 0}}>
-                    <Grid item ><Typography variant="h4" color={themes[currTheme].palette.secondary.main} sx={{ textShadow: "4px 4px #000000" }}>{songInfo.property}</Typography></Grid>
-                    <Grid item ><Typography variant="h5" color={themes[currTheme].palette.secondary.main} sx={{ marginLeft: 2, textShadow: "4px 4px #000000" }}>{songInfo.song_name}</Typography></Grid>
+              : <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-start", alignItems: "end", margin: 0,  marginTop: 2 }}>
+                    <Grid item ><Typography variant="h2" color={themes[currTheme].palette.secondary.main} sx={{ textShadow: "4px 4px #000000"}}>{songInfo.property}</Typography></Grid>
+                    <Grid item ><Typography variant="h3" color={themes[currTheme].palette.secondary.main} sx={{ marginLeft: 4, textShadow: "4px 4px #000000" }}>{songInfo.song_name}</Typography></Grid>
                 </Grid>
             }
 
-            <Grid container spacing={2} sx={{width: 0.7, marginTop: 4}}>
+            <Grid container spacing={2} sx={{width: 1, marginTop: 2}}>
               {choices.map((choice, index) => {
                 return <Grid item xs={6} sx={{ width: 1, height: "100px" }}>
                   <Choice key={index} index={index} id={choice.id} property={choice.property} correct={choice.correct} showAnswer={showAnswer} handleClick={handleClick} style={{height: "100%"}}/>
