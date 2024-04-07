@@ -19,7 +19,7 @@ import defeat from "./music/misc/Defeat.mp3";
 function App() {
   const [hidden, setHidden] = useState(true);
   const [intro, setIntro] = useState(true);
-  const [difficulty, setDifficulty] = useState("Hard");
+  const [difficulty, setDifficulty] = useState("Easy");
   const [category, setCategory] = useState("Anime");
 
   const [choices, setChoices] = useState([{}]);
@@ -95,6 +95,7 @@ function App() {
     return songData.data
   }
 
+  // Updating .mp3 reference whenever new songFilePath pulled
   useEffect(() => {
     if (songFilePath) {
       const fetchAudio = async () => {
@@ -139,6 +140,7 @@ function App() {
   function handleDifficulty(event) {
     clickNoise();
     const difficulty = event.target.value;
+    console.log(difficulty);
     setDifficulty(difficulty);
   }
 
@@ -267,42 +269,61 @@ function App() {
 
             <Grid container spacing={2} sx={{ width: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
 
-              <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+              <Grid item xs={12} sx={{textAlign: "center"}}>
                   <Typography variant="poster" color={themes[currTheme].palette.secondary.main} 
-                    sx={{ textShadow: "4px 4px #000000" }}>Song Guesser
+                    sx={{ textShadow: "4px 4px #000000", fontFamily: "Anta" }}>
+                      Song Guesser
                   </Typography>
               </Grid>
 
               <Grid container spacing={2} sx={{ marginRight: 4, width: 0.4, marginTop: 4, height: "30vh" }}>
                 <Grid item xs={6}>
-                  <Button onClick={handleCategory} value="Anime" variant="contained" sx={{width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", typography: "h4", padding: 0}}>Anime</Button>
+                  <Button onClick={handleCategory} value="Anime" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>
+                      Anime
+                  </Button>
                 </Grid>
                 <Grid item xs={6}>
-                  <Button onClick={handleCategory} value="Indie" variant="contained" sx={{width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", typography: "h4", padding: 0}}>Indie</Button>
+                  <Button onClick={handleCategory} value="Indie" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>                    
+                      Indie
+                  </Button>
                 </Grid>
                 <Grid item xs={6}>
-                  <Button onClick={handleCategory} value="Video Games" variant="contained" sx={{width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", typography: "h4", padding: 0}}>Video Games</Button>
+                  <Button onClick={handleCategory} value="Video Games" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>
+                      Video Games
+                  </Button>
                 </Grid>
                 <Grid item xs={6}>
-                  <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", typography: "h4", padding: 0}}>Movies</Button>
+                  <Button onClick={handleCategory} value="Movies" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>
+                      Movies
+                  </Button>
                 </Grid>
                 <Grid item xs={6}>
-                  <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", typography: "h4", padding: 0}}>TV</Button>
+                  <Button onClick={handleCategory} value="TV Shows" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>
+                      TV Shows
+                  </Button>
                 </Grid>
                 <Grid item xs={6}>
-                  <Button onClick={handleCategory} value="Games" variant="contained" sx={{width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", typography: "h4", padding: 0}}>Top 40</Button>
+                  <Button onClick={handleCategory} value="Top 40" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>
+                      Top 40
+                  </Button>
                 </Grid>
               </Grid>
 
               <Grid container spacing={2} sx={{ width: 0.4, marginTop: 4, height: "20vh"}}>
                 <Grid item xs={6}>
-                  <Button onClick={handleDifficulty} value="Easy" variant="contained" sx={{width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", typography: "h3", padding: 0}}>Easy</Button>
+                  <Button onClick={handleDifficulty} value="Easy" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h3", fontFamily: "Anta" }}>
+                      Easy
+                  </Button>
                 </Grid>
                 <Grid item xs={6}>
-                  <Button onClick={handleDifficulty} value="Hard" variant="contained" sx={{width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", typography: "h3", padding: 0}}>Hard</Button>
+                  <Button onClick={handleDifficulty} value="Hard" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%",padding: 0, typography: "h3", fontFamily: "Anta" }}>
+                      Hard
+                  </Button>
                 </Grid>
                 <Grid item xs={12} sx={{display: "flex", justifyContent: "center"}}>
-                  <Button onClick={startGame} variant="contained" sx={{width: 0.8, height: 90, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", typography: "h3", padding: 0}}>Start</Button>
+                  <Button onClick={startGame} variant="contained" sx={{ width: 0.8, height: 90, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h3", fontFamily: "Anta" }}>
+                      Start
+                  </Button>
                 </Grid>
               </Grid>
 
@@ -341,8 +362,8 @@ function App() {
                       <Video hidden={hidden} url={videoURL}/>
                     </Grid>
                     <Grid item xs={1} sx={{ marginLeft: 0, width: "100%"}}>
-                      <Button onClick={nextQuestion} variant="contained" sx={{height: "20vh", width: "100%", minWidth: "unset", boxShadow: 10, border: "2px solid antiquewhite", marginLeft: 2 + "8px"}}><SkipNext sx={{height: "40px"}}/></Button>
-                      <Button onClick={null} variant="contained" sx={{height: "20vh", width: "100%", minWidth: "unset", marginTop: 2, boxShadow: 10, border: "2px solid antiquewhite", marginLeft: 2 + "8px"}}><Repeat onClick={toggleAudioPlayback} sx={{height: "40px"}}/></Button>
+                      <Button onClick={nextQuestion} variant="contained" sx={{height: "calc(20vh - 3px)", width: "100%", minWidth: "unset", boxShadow: 10, border: "2px solid antiquewhite", marginLeft: 2 + "8px"}}><SkipNext sx={{height: "40px"}}/></Button>
+                      <Button onClick={null} variant="contained" sx={{height: "calc(20vh - 3px)", width: "100%", minWidth: "unset", marginTop: 2, boxShadow: 10, border: "2px solid antiquewhite", marginLeft: 2 + "8px"}}><Repeat onClick={toggleAudioPlayback} sx={{height: "40px"}}/></Button>
                     </Grid>
                   </Box>
               }
