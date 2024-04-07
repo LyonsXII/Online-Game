@@ -22,6 +22,8 @@ function App() {
   const [difficulty, setDifficulty] = useState("Easy");
   const [category, setCategory] = useState("Anime");
 
+  const [explainHidden, setExplainHidden] = useState(true);
+
   const [choices, setChoices] = useState([{}]);
   const [numQuestions, setNumQuestions] = useState(0);
   const [songInfo, setSongInfo] = useState([{}]);
@@ -278,7 +280,8 @@ function App() {
 
               <Grid container spacing={2} sx={{ marginRight: 4, width: 0.4, marginTop: 4, height: "30vh" }}>
                 <Grid item xs={6}>
-                  <Button onClick={handleCategory} value="Anime" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>
+                  <Button onClick={handleCategory} onMouseOver={() => {setExplainHidden(false);}} 
+                    onMouseLeave={() => {setExplainHidden(true);}} value="Anime" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>
                       Anime
                   </Button>
                 </Grid>
@@ -328,6 +331,14 @@ function App() {
               </Grid>
 
             </Grid>
+
+            {explainHidden ? null : 
+              <Box sx={{position: "absolute", display: "flex", alignItems: "center", bottom: 0, left: 0, height: "4%", width: "100%", backgroundColor: "antiquewhite"}}>
+                <Typography variant="h5" sx={{marginLeft: "10px"}}>Hello world!</Typography>
+              </Box>
+            }
+            
+
           </Container>
         </ThemeProvider>
     )
