@@ -4,6 +4,9 @@ import axios from "axios";
 
 import { Container, Box, Grid, Typography, CardMedia, createTheme, ThemeProvider } from "@mui/material";
 import { Repeat } from '@mui/icons-material';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 
 import HomeButton from "./HomeButton";
 import ToggleTheme from "./ToggleTheme";
@@ -24,6 +27,7 @@ function App() {
 
   const [explainHidden, setExplainHidden] = useState(true);
   const [settingsVisible, setSettingsVisible] = useState(false);
+  const [autoplay, setAutoplay] = useState(true);
 
   const [choices, setChoices] = useState([{}]);
   const [numQuestions, setNumQuestions] = useState(0);
@@ -111,6 +115,14 @@ function App() {
     }
    }, [songFilePath]);
 
+   useEffect(() => {
+    if (pipelineAudioFile) {
+      setTimeout(() => {
+        audioRef.current.play();
+      }, 500);
+    }
+   }, [pipelineAudioFile]);
+
   function startGame() {
     clickNoise();
     getNumQuestions();
@@ -126,6 +138,7 @@ function App() {
     fetchData();
     setShowAnswer(false);
     setHidden(true);
+    audioRef.current.play();
   }
 
   function resetGame() {
@@ -172,13 +185,14 @@ function App() {
 
   function toggleAudioPlayback() {
     clickNoise();
-    if (!isPlaying) {
-      audioRef.current.play();
-    } else {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-    setIsPlaying(!isPlaying);
+    // if (!isPlaying) {
+    //   audioRef.current.play();
+    // } else {
+    //   audioRef.current.pause();
+    //   audioRef.current.currentTime = 0;
+    // }
+    // setIsPlaying(!isPlaying);
+    audioRef.current.play();
   }
 
   function toggleTheme() {
@@ -274,7 +288,10 @@ function App() {
             <Box>
               <Box sx={{ position: "absolute", top: "0", height: "100vh", width: "100vw", backgroundColor: "black", zIndex: "1", opacity: "0.9" }}>
               </Box>
-              <Box sx={{ position: "absolute", top: "calc(50% - 100px)", left: "calc(50% - 200px)", height: "200px", width: "400px", backgroundColor: "antiquewhite", zIndex: "2" }}>
+              <Box sx={{ display: "flex", position: "absolute", top: "calc(50% - 200px)", left: "calc(50% - 200px)", width: "400px", backgroundColor: themes[currTheme].palette.primary.main, border: "2px solid antiquewhite", borderRadius: "20px", padding: "20px", paddingBottom: "60px", zIndex: "2" }}>
+              <FormGroup>
+                <FormControlLabel control={<Switch color="default" />} label="Autoplay" />
+              </FormGroup>
               </Box>
             </Box>
           : null}
@@ -363,11 +380,23 @@ function App() {
   } else {
     return (
       <ThemeProvider theme={themes[currTheme]}>
-        <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2, display: "flex", flexDirection: "column", gap: 1 }}>
+        <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2, display: "flex", flexDirection: "column", gap: 1, zIndex: "2" }}>
           <HomeButton resetGame={resetGame}/>
           <ToggleTheme toggleTheme={toggleTheme}/>
-          <SettingsButton></SettingsButton>
+          <SettingsButton toggleSettingsMenu={toggleSettingsMenu}></SettingsButton>
         </Box>
+
+        {settingsVisible ? 
+            <Box>
+              <Box sx={{ position: "absolute", top: "0", height: "100vh", width: "100vw", backgroundColor: "black", zIndex: "1", opacity: "0.9" }}>
+              </Box>
+              <Box sx={{ display: "flex", position: "absolute", top: "calc(50% - 200px)", left: "calc(50% - 200px)", width: "400px", backgroundColor: themes[currTheme].palette.primary.main, border: "2px solid antiquewhite", borderRadius: "20px", padding: "20px", paddingBottom: "60px", zIndex: "2" }}>
+              <FormGroup>
+                <FormControlLabel control={<Switch color="default" />} label="Autoplay" />
+              </FormGroup>
+              </Box>
+            </Box>
+          : null}
 
         <Box sx={{ position: "absolute", top: 0, left: 0, marginTop: 2, marginLeft: 2 }}>
             <Typography variant="h2" color={themes[currTheme].palette.secondary.main} sx={{ textShadow: "4px 4px #000000" }}>Score: {score}/{numQuestions - 3}</Typography>
