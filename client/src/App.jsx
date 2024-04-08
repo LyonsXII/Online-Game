@@ -4,10 +4,10 @@ import axios from "axios";
 
 import { Container, Box, Grid, Typography, CardMedia, createTheme, ThemeProvider } from "@mui/material";
 import { Repeat } from '@mui/icons-material';
-import { SkipNext } from '@mui/icons-material';
 
 import HomeButton from "./HomeButton";
 import ToggleTheme from "./ToggleTheme";
+import SettingsButton from "./SettingsButton";
 import Video from "./Video";
 import Choice from "./Choice"
 import Button from '@mui/material/Button';
@@ -170,6 +170,7 @@ function App() {
   }
 
   function toggleAudioPlayback() {
+    clickNoise();
     if (!isPlaying) {
       audioRef.current.play();
     } else {
@@ -180,6 +181,7 @@ function App() {
   }
 
   function toggleTheme() {
+    clickNoise();
     setCurrTheme((prevTheme) => (prevTheme + 1) % themes.length);
 
     if ((currTheme + 1) % themes.length === 0) {
@@ -192,6 +194,10 @@ function App() {
       document.body.style.backgroundImage = "url('https://www.transparenttextures.com/patterns/dark-wood.png')";
       document.body.style.backgroundColor = "#592500";
     }
+  }
+
+  function toggleSettingsMenu() {
+    clickNoise();
   }
 
   let themes = [createTheme({
@@ -264,6 +270,7 @@ function App() {
           <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2, display: "flex", flexDirection: "column", gap: 1 }}>
             <HomeButton resetGame={resetGame}/>
             <ToggleTheme toggleTheme={toggleTheme}/>
+            <SettingsButton toggleSettingsMenu={toggleSettingsMenu}></SettingsButton>
           </Box>
           <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2 }}></Box>
 
@@ -338,7 +345,6 @@ function App() {
               </Box>
             }
             
-
           </Container>
         </ThemeProvider>
     )
@@ -348,6 +354,7 @@ function App() {
         <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2, display: "flex", flexDirection: "column", gap: 1 }}>
           <HomeButton resetGame={resetGame}/>
           <ToggleTheme toggleTheme={toggleTheme}/>
+          <SettingsButton></SettingsButton>
         </Box>
 
         <Box sx={{ position: "absolute", top: 0, left: 0, marginTop: 2, marginLeft: 2 }}>
@@ -369,21 +376,15 @@ function App() {
                   </Typography>
                 </Box>
                 : <Box sx={{ display: "flex", justifyContent: "center", width: 1 }}>
-                    <Grid item xs={11} >
-                      <Video hidden={hidden} url={videoURL}/>
-                    </Grid>
-                    <Grid item xs={1} sx={{ marginLeft: 0, width: "100%"}}>
-                      <Button onClick={nextQuestion} variant="contained" sx={{height: "calc(20vh - 3px)", width: "100%", minWidth: "unset", boxShadow: 10, border: "2px solid antiquewhite", marginLeft: 2 + "8px"}}><SkipNext sx={{height: "40px"}}/></Button>
-                      <Button onClick={null} variant="contained" sx={{height: "calc(20vh - 3px)", width: "100%", minWidth: "unset", marginTop: 2, boxShadow: 10, border: "2px solid antiquewhite", marginLeft: 2 + "8px"}}><Repeat onClick={toggleAudioPlayback} sx={{height: "40px"}}/></Button>
-                    </Grid>
+                    <Video hidden={hidden} url={videoURL} nextQuestion={nextQuestion} toggleAudioPlayback={toggleAudioPlayback}></Video>
                   </Box>
               }
             </Grid>
 
             {hidden ? null 
               : <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-start", alignItems: "end", margin: 0,  marginTop: 2 }}>
-                    <Grid item ><Typography variant="h2" color={themes[currTheme].palette.secondary.main} sx={{ textShadow: "4px 4px #000000"}}>{songInfo.property}</Typography></Grid>
-                    <Grid item ><Typography variant="h3" color={themes[currTheme].palette.secondary.main} sx={{ marginLeft: 4, textShadow: "4px 4px #000000" }}>{songInfo.song_name}</Typography></Grid>
+                    <Grid item ><Typography variant="h3" color={themes[currTheme].palette.secondary.main} sx={{ textShadow: "4px 4px #000000"}}>{songInfo.property}</Typography></Grid>
+                    <Grid item ><Typography variant="h4" color={themes[currTheme].palette.secondary.main} sx={{ marginLeft: 4, textShadow: "4px 4px #000000" }}>{songInfo.song_name}</Typography></Grid>
                 </Grid>
             }
 
