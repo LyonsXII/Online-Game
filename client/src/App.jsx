@@ -23,6 +23,7 @@ function App() {
   const [category, setCategory] = useState("Anime");
 
   const [explainHidden, setExplainHidden] = useState(true);
+  const [settingsVisible, setSettingsVisible] = useState(false);
 
   const [choices, setChoices] = useState([{}]);
   const [numQuestions, setNumQuestions] = useState(0);
@@ -198,6 +199,7 @@ function App() {
 
   function toggleSettingsMenu() {
     clickNoise();
+    settingsVisible ? setSettingsVisible(false) : setSettingsVisible(true);
   }
 
   let themes = [createTheme({
@@ -267,7 +269,17 @@ function App() {
   if (intro) {
     return (
         <ThemeProvider theme={themes[currTheme]}>
-          <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2, display: "flex", flexDirection: "column", gap: 1 }}>
+
+          {settingsVisible ? 
+            <Box>
+              <Box sx={{ position: "absolute", top: "0", height: "100vh", width: "100vw", backgroundColor: "black", zIndex: "1", opacity: "0.9" }}>
+              </Box>
+              <Box sx={{ position: "absolute", top: "calc(50% - 100px)", left: "calc(50% - 200px)", height: "200px", width: "400px", backgroundColor: "antiquewhite", zIndex: "2" }}>
+              </Box>
+            </Box>
+          : null}
+
+          <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2, display: "flex", flexDirection: "column", gap: 1, zIndex: "2" }}>
             <HomeButton resetGame={resetGame}/>
             <ToggleTheme toggleTheme={toggleTheme}/>
             <SettingsButton toggleSettingsMenu={toggleSettingsMenu}></SettingsButton>
