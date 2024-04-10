@@ -11,6 +11,7 @@ import Switch from '@mui/material/Switch';
 import HomeButton from "./HomeButton";
 import ToggleTheme from "./ToggleTheme";
 import SettingsButton from "./SettingsButton";
+import CategoryButton from "./CategoryButton";
 import Video from "./Video";
 import Choice from "./Choice"
 import Button from '@mui/material/Button';
@@ -233,6 +234,10 @@ function App() {
     setExplainText(explainTextOptions[event.target.value]);
   }
 
+  function hideExplain() {
+    setExplainHidden(true);
+  }
+
   let themes = [createTheme({
     palette: {
       primary: {
@@ -332,39 +337,18 @@ function App() {
               </Grid>
 
               <Grid container spacing={2} sx={{ marginRight: 4, width: 0.4, marginTop: 4, height: "30vh" }}>
-                <Grid item xs={6}>
-                  <Button onClick={handleCategory} onMouseOver={updateExplain} 
-                    onMouseLeave={() => {setExplainHidden(true);}} value="Anime" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>
-                      Anime
-                  </Button>
-                </Grid>
-                <Grid item xs={6}>
-                  <Button onClick={handleCategory} onMouseOver={updateExplain} 
-                    onMouseLeave={() => {setExplainHidden(true);}} value="Indie" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>                    
-                      Indie
-                  </Button>
-                </Grid>
-                <Grid item xs={6}>
-                  <Button onClick={handleCategory} onMouseOver={updateExplain} 
-                    onMouseLeave={() => {setExplainHidden(true);}} value="Video Games" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>
-                      Video Games
-                  </Button>
-                </Grid>
-                <Grid item xs={6}>
-                  <Button onClick={handleCategory} value="Movies" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>
-                      Movies
-                  </Button>
-                </Grid>
-                <Grid item xs={6}>
-                  <Button onClick={handleCategory} value="TV Shows" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>
-                      TV Shows
-                  </Button>
-                </Grid>
-                <Grid item xs={6}>
-                  <Button onClick={handleCategory} value="Top 40" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>
-                      Top 40
-                  </Button>
-                </Grid>
+                  <CategoryButton handleDifficulty={handleDifficulty} updateExplain={updateExplain} 
+                    hideExplain={hideExplain} buttonText={"Anime"}></CategoryButton>
+                  <CategoryButton handleDifficulty={handleDifficulty} updateExplain={updateExplain} 
+                    hideExplain={hideExplain} buttonText={"Indie"}></CategoryButton>
+                  <CategoryButton handleDifficulty={handleDifficulty} updateExplain={updateExplain} 
+                    hideExplain={hideExplain} buttonText={"Video Games"}></CategoryButton>
+                  <CategoryButton handleDifficulty={handleDifficulty} updateExplain={updateExplain} 
+                    hideExplain={hideExplain} buttonText={"Movies"}></CategoryButton>
+                  <CategoryButton handleDifficulty={handleDifficulty} updateExplain={updateExplain} 
+                    hideExplain={hideExplain} buttonText={"TV Shows"}></CategoryButton>
+                  <CategoryButton handleDifficulty={handleDifficulty} updateExplain={updateExplain} 
+                    hideExplain={hideExplain} buttonText={"Top 40"}></CategoryButton>
               </Grid>
 
               <Grid container spacing={2} sx={{ width: 0.4, marginTop: 4, height: "20vh"}}>
@@ -401,23 +385,23 @@ function App() {
   } else {
     return (
       <ThemeProvider theme={themes[currTheme]}>
+        {settingsVisible ? 
+          <Box>
+            <Box sx={{ position: "absolute", top: "0", height: "100vh", width: "100vw", backgroundColor: "black", zIndex: "1", opacity: "0.9" }}>
+            </Box>
+            <Box sx={{ display: "flex", position: "absolute", top: "calc(50% - 200px)", left: "calc(50% - 200px)", width: "400px", backgroundColor: themes[currTheme].palette.primary.main, border: "2px solid antiquewhite", borderRadius: "20px", padding: "20px", paddingBottom: "60px", zIndex: "2" }}>
+            <FormGroup>
+              <FormControlLabel onChange={toggleAutoplay} checked={autoplay} control={<Switch color="default" />} label="Autoplay" />
+            </FormGroup>
+            </Box>
+          </Box>
+        : null}
+
         <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2, display: "flex", flexDirection: "column", gap: 1, zIndex: "2" }}>
           <HomeButton resetGame={resetGame}/>
           <ToggleTheme toggleTheme={toggleTheme}/>
           <SettingsButton toggleSettingsMenu={toggleSettingsMenu}></SettingsButton>
         </Box>
-
-        {settingsVisible ? 
-            <Box>
-              <Box sx={{ position: "absolute", top: "0", height: "100vh", width: "100vw", backgroundColor: "black", zIndex: "1", opacity: "0.9" }}>
-              </Box>
-              <Box sx={{ display: "flex", position: "absolute", top: "calc(50% - 200px)", left: "calc(50% - 200px)", width: "400px", backgroundColor: themes[currTheme].palette.primary.main, border: "2px solid antiquewhite", borderRadius: "20px", padding: "20px", paddingBottom: "60px", zIndex: "2" }}>
-              <FormGroup>
-                <FormControlLabel onChange={toggleAutoplay} checked={autoplay} control={<Switch color="default" />} label="Autoplay" />
-              </FormGroup>
-              </Box>
-            </Box>
-          : null}
 
         <Box sx={{ position: "absolute", top: 0, left: 0, marginTop: 2, marginLeft: 2 }}>
             <Typography variant="h2" color={themes[currTheme].palette.secondary.main} sx={{ textShadow: "4px 4px #000000" }}>Score: {score}/{numQuestions - 3}</Typography>
