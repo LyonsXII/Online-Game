@@ -26,8 +26,9 @@ function App() {
   const [category, setCategory] = useState("Anime");
 
   const [explainHidden, setExplainHidden] = useState(true);
+  const [explainText, setExplainText] = useState("");
   const [settingsVisible, setSettingsVisible] = useState(false);
-  const [autoplay, setAutoplay] = useState(true);
+  const [autoplay, setAutoplay] = useState(false);
 
   const [choices, setChoices] = useState([{}]);
   const [numQuestions, setNumQuestions] = useState(0);
@@ -47,6 +48,12 @@ function App() {
   const audioRef = React.useRef(null);
 
   const [currTheme, setCurrTheme] = useState(0);
+
+  const explainTextOptions = {Anime: "A selection of favourite anime openings. Includes some popular tracks as well as a few more obscure offerings.",
+ Indie: "A",
+ "Video Games": "B",
+  "Easy": "Hear a 10 second long clip and make your choice!",
+  "Hard": "Kick things up a notch! This time the clip is only five seconds long. Do your best!"}
 
   // Fetch number of possible questions for category from database
   async function getNumQuestions() {
@@ -115,8 +122,9 @@ function App() {
     }
    }, [songFilePath]);
 
+   // Autoplay song on page load if option selected
    useEffect(() => {
-    if (pipelineAudioFile) {
+    if (pipelineAudioFile && autoplay) {
       setTimeout(() => {
         audioRef.current.play();
       }, 500);
@@ -216,6 +224,15 @@ function App() {
     settingsVisible ? setSettingsVisible(false) : setSettingsVisible(true);
   }
 
+  function toggleAutoplay() {
+    autoplay ? setAutoplay(false) : setAutoplay(true);
+  }
+
+  function updateExplain(event) {
+    setExplainHidden(false);
+    setExplainText(explainTextOptions[event.target.value]);
+  }
+
   let themes = [createTheme({
     palette: {
       primary: {
@@ -290,7 +307,7 @@ function App() {
               </Box>
               <Box sx={{ display: "flex", position: "absolute", top: "calc(50% - 200px)", left: "calc(50% - 200px)", width: "400px", backgroundColor: themes[currTheme].palette.primary.main, border: "2px solid antiquewhite", borderRadius: "20px", padding: "20px", paddingBottom: "60px", zIndex: "2" }}>
               <FormGroup>
-                <FormControlLabel control={<Switch color="default" />} label="Autoplay" />
+                <FormControlLabel onChange={toggleAutoplay} checked={autoplay} control={<Switch color="default" />} label="Autoplay" />
               </FormGroup>
               </Box>
             </Box>
@@ -316,18 +333,20 @@ function App() {
 
               <Grid container spacing={2} sx={{ marginRight: 4, width: 0.4, marginTop: 4, height: "30vh" }}>
                 <Grid item xs={6}>
-                  <Button onClick={handleCategory} onMouseOver={() => {setExplainHidden(false);}} 
+                  <Button onClick={handleCategory} onMouseOver={updateExplain} 
                     onMouseLeave={() => {setExplainHidden(true);}} value="Anime" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>
                       Anime
                   </Button>
                 </Grid>
                 <Grid item xs={6}>
-                  <Button onClick={handleCategory} value="Indie" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>                    
+                  <Button onClick={handleCategory} onMouseOver={updateExplain} 
+                    onMouseLeave={() => {setExplainHidden(true);}} value="Indie" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>                    
                       Indie
                   </Button>
                 </Grid>
                 <Grid item xs={6}>
-                  <Button onClick={handleCategory} value="Video Games" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>
+                  <Button onClick={handleCategory} onMouseOver={updateExplain} 
+                    onMouseLeave={() => {setExplainHidden(true);}} value="Video Games" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>
                       Video Games
                   </Button>
                 </Grid>
@@ -350,12 +369,14 @@ function App() {
 
               <Grid container spacing={2} sx={{ width: 0.4, marginTop: 4, height: "20vh"}}>
                 <Grid item xs={6}>
-                  <Button onClick={handleDifficulty} value="Easy" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h3", fontFamily: "Anta" }}>
+                  <Button onClick={handleDifficulty} onMouseOver={updateExplain} 
+                    onMouseLeave={() => {setExplainHidden(true);}} value="Easy" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h3", fontFamily: "Anta" }}>
                       Easy
                   </Button>
                 </Grid>
                 <Grid item xs={6}>
-                  <Button onClick={handleDifficulty} value="Hard" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%",padding: 0, typography: "h3", fontFamily: "Anta" }}>
+                  <Button onClick={handleDifficulty} value="Hard" onMouseOver={updateExplain} 
+                    onMouseLeave={() => {setExplainHidden(true);}} variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%",padding: 0, typography: "h3", fontFamily: "Anta" }}>
                       Hard
                   </Button>
                 </Grid>
@@ -369,8 +390,8 @@ function App() {
             </Grid>
 
             {explainHidden ? null : 
-              <Box sx={{position: "absolute", display: "flex", alignItems: "center", bottom: 0, left: 0, height: "4%", width: "100%", backgroundColor: "antiquewhite"}}>
-                <Typography variant="h5" sx={{marginLeft: "10px"}}>Hello world!</Typography>
+              <Box sx={{position: "absolute", display: "flex", alignItems: "center", bottom: 0, left: 0, width: "100%", paddingTop: 1, paddingBottom: 1, backgroundColor: "black", background: "rgba(0, 0, 0, 0.6)"}}>
+                <Typography variant="h5" sx={{marginLeft: "10px", color: "antiquewhite"}}>{explainText}</Typography>
               </Box>
             }
             
@@ -392,7 +413,7 @@ function App() {
               </Box>
               <Box sx={{ display: "flex", position: "absolute", top: "calc(50% - 200px)", left: "calc(50% - 200px)", width: "400px", backgroundColor: themes[currTheme].palette.primary.main, border: "2px solid antiquewhite", borderRadius: "20px", padding: "20px", paddingBottom: "60px", zIndex: "2" }}>
               <FormGroup>
-                <FormControlLabel control={<Switch color="default" />} label="Autoplay" />
+                <FormControlLabel onChange={toggleAutoplay} checked={autoplay} control={<Switch color="default" />} label="Autoplay" />
               </FormGroup>
               </Box>
             </Box>
