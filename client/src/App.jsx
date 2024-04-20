@@ -20,6 +20,8 @@ import click from "./music/misc/Click.mp3";
 import victory from "./music/misc/Victory.mp3";
 import defeat from "./music/misc/Defeat.mp3";
 
+import tutorials from './text/tutorial.json';
+
 function App() {
   const [hidden, setHidden] = useState(true);
   const [intro, setIntro] = useState(true);
@@ -50,11 +52,7 @@ function App() {
 
   const [currTheme, setCurrTheme] = useState(0);
 
-  const explainTextOptions = {Anime: "A selection of favourite anime openings. Includes some popular tracks as well as a few more obscure offerings.",
- Indie: "A",
- "Video Games": "B",
-  "Easy": "Hear a 10 second long clip and make your choice!",
-  "Hard": "Kick things up a notch! This time the clip is only five seconds long. Do your best!"}
+
 
   // Fetch number of possible questions for category from database
   async function getNumQuestions() {
@@ -165,7 +163,6 @@ function App() {
   function handleDifficulty(event) {
     clickNoise();
     const difficulty = event.target.value;
-    console.log(difficulty);
     setDifficulty(difficulty);
   }
 
@@ -231,7 +228,7 @@ function App() {
 
   function updateExplain(event) {
     setExplainHidden(false);
-    setExplainText(explainTextOptions[event.target.value]);
+    setExplainText(tutorials[event.target.value]);
   }
 
   function hideExplain() {
@@ -337,17 +334,17 @@ function App() {
               </Grid>
 
               <Grid container spacing={2} sx={{ marginRight: 4, width: 0.4, marginTop: 4, height: "30vh" }}>
-                  <CategoryButton handleDifficulty={handleDifficulty} updateExplain={updateExplain} 
+                  <CategoryButton changeMode={handleCategory} updateExplain={updateExplain} 
                     hideExplain={hideExplain} buttonText={"Anime"}></CategoryButton>
-                  <CategoryButton handleDifficulty={handleDifficulty} updateExplain={updateExplain} 
+                  <CategoryButton changeMode={handleCategory} updateExplain={updateExplain} 
                     hideExplain={hideExplain} buttonText={"Indie"}></CategoryButton>
-                  <CategoryButton handleDifficulty={handleDifficulty} updateExplain={updateExplain} 
+                  <CategoryButton changeMode={handleCategory} updateExplain={updateExplain} 
                     hideExplain={hideExplain} buttonText={"Video Games"}></CategoryButton>
-                  <CategoryButton handleDifficulty={handleDifficulty} updateExplain={updateExplain} 
+                  <CategoryButton changeMode={handleCategory} updateExplain={updateExplain} 
                     hideExplain={hideExplain} buttonText={"Movies"}></CategoryButton>
-                  <CategoryButton handleDifficulty={handleDifficulty} updateExplain={updateExplain} 
+                  <CategoryButton changeMode={handleCategory} updateExplain={updateExplain} 
                     hideExplain={hideExplain} buttonText={"TV Shows"}></CategoryButton>
-                  <CategoryButton handleDifficulty={handleDifficulty} updateExplain={updateExplain} 
+                  <CategoryButton changeMode={handleCategory} updateExplain={updateExplain} 
                     hideExplain={hideExplain} buttonText={"Top 40"}></CategoryButton>
               </Grid>
 
@@ -359,8 +356,8 @@ function App() {
                   </Button>
                 </Grid>
                 <Grid item xs={6}>
-                  <Button onClick={handleDifficulty} value="Hard" onMouseOver={updateExplain} 
-                    onMouseLeave={() => {setExplainHidden(true);}} variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%",padding: 0, typography: "h3", fontFamily: "Anta" }}>
+                  <Button onClick={handleDifficulty}  onMouseOver={updateExplain} 
+                    onMouseLeave={() => {setExplainHidden(true);}} value="Hard" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%",padding: 0, typography: "h3", fontFamily: "Anta" }}>
                       Hard
                   </Button>
                 </Grid>
