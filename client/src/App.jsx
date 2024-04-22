@@ -28,6 +28,7 @@ function App() {
   const [intro, setIntro] = useState(true);
   const [difficulty, setDifficulty] = useState("Easy");
   const [category, setCategory] = useState("Anime");
+  const [mode, setMode] = useState("Challenge");
 
   const [explainHidden, setExplainHidden] = useState(true);
   const [explainText, setExplainText] = useState("");
@@ -168,6 +169,12 @@ function App() {
     setDifficulty(difficulty);
   }
 
+  function handleMode(event) {
+    clickNoise();
+    const mode = event.target.value;
+    setMode(mode);
+  }
+
   function toggleVideo() {
     hidden ? setHidden(false) : setHidden(true);
   }
@@ -187,8 +194,8 @@ function App() {
     } else {
       playLose();
       setScore(0);
-    }
-    setShowAnswer(true);
+      }
+      setShowAnswer(true);
   }
 
   function toggleAudioPlayback() {
@@ -361,9 +368,9 @@ function App() {
                     hideExplain={hideExplain} buttonText={"Top 40"}></CategoryButton>
               </Grid>
 
-              <Grid container spacing={2} sx={{ width: 0.4, marginTop: 4, height: "20vh"}}>
-                <Grid item xs={6}>
-                  <Button onClick={handleDifficulty} onMouseOver={updateExplain} 
+              <Grid container spacing={2} sx={{ width: 0.4, marginTop: 4, height: "30vh"}}>
+              <Grid item xs={6}>
+                <Button onClick={handleDifficulty} onMouseOver={updateExplain} 
                     onMouseLeave={() => {setExplainHidden(true);}} value="Easy" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h3", fontFamily: "Anta" }}>
                       Easy
                   </Button>
@@ -372,6 +379,18 @@ function App() {
                   <Button onClick={handleDifficulty}  onMouseOver={updateExplain} 
                     onMouseLeave={() => {setExplainHidden(true);}} value="Hard" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%",padding: 0, typography: "h3", fontFamily: "Anta" }}>
                       Hard
+                  </Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button onClick={handleMode} onMouseOver={updateExplain} 
+                    onMouseLeave={() => {setExplainHidden(true);}} value="Challenge" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h3", fontFamily: "Anta" }}>
+                      Challenge
+                  </Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button onClick={handleMode}  onMouseOver={updateExplain} 
+                    onMouseLeave={() => {setExplainHidden(true);}} value="Sudden Death" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%",padding: 0, typography: "h3", fontFamily: "Anta" }}>
+                      Sudden Death
                   </Button>
                 </Grid>
                 <Grid item xs={12} sx={{display: "flex", justifyContent: "center"}}>
