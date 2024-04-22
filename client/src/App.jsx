@@ -7,6 +7,7 @@ import { Repeat } from '@mui/icons-material';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import Slider from '@mui/material/Slider';
 
 import HomeButton from "./HomeButton";
 import ToggleTheme from "./ToggleTheme";
@@ -31,7 +32,8 @@ function App() {
   const [explainHidden, setExplainHidden] = useState(true);
   const [explainText, setExplainText] = useState("");
   const [settingsVisible, setSettingsVisible] = useState(false);
-  const [autoplay, setAutoplay] = useState(false);
+  const [autoplay, setAutoplay] = useState(true);
+  const [volume, setVolume] = useState(30);
 
   const [choices, setChoices] = useState([{}]);
   const [numQuestions, setNumQuestions] = useState(0);
@@ -226,6 +228,13 @@ function App() {
     autoplay ? setAutoplay(false) : setAutoplay(true);
   }
 
+  function adjustVolume(event) {
+    setVolume(event.target.value);
+    if (audioRef.current) {
+      audioRef.current.volume = event.target.value / 100;
+    }
+  }
+
   function updateExplain(event) {
     setExplainHidden(false);
     setExplainText(tutorials[event.target.value]);
@@ -305,11 +314,15 @@ function App() {
 
           {settingsVisible ? 
             <Box>
-              <Box sx={{ position: "absolute", top: "0", height: "100vh", width: "100vw", backgroundColor: "black", zIndex: "1", opacity: "0.9" }}>
+              <Box onClick={toggleSettingsMenu} sx={{ position: "absolute", top: "0", height: "100vh", width: "100vw", backgroundColor: "black", zIndex: "1", opacity: "0.9" }}>
               </Box>
               <Box sx={{ display: "flex", position: "absolute", top: "calc(50% - 200px)", left: "calc(50% - 200px)", width: "400px", backgroundColor: themes[currTheme].palette.primary.main, border: "2px solid antiquewhite", borderRadius: "20px", padding: "20px", paddingBottom: "60px", zIndex: "2" }}>
-              <FormGroup>
-                <FormControlLabel onChange={toggleAutoplay} checked={autoplay} control={<Switch color="default" />} label="Autoplay" />
+              <FormGroup sx={{width: "100%"}}>
+                <FormControlLabel onChange={toggleAutoplay} checked={autoplay} control={<Switch color="default" />} 
+                  label="Autoplay" labelPlacement="start" sx={{width: "20%", color: themes[currTheme].palette.secondary.main, gap: 1, marginLeft: 8}}
+                />
+                <FormControlLabel onChange={adjustVolume} checked={autoplay} control={<Slider defaultValue={volume} aria-label="Volume" color="secondary"/>} label="Volume" labelPlacement="start" sx={{width: "80%", color: themes[currTheme].palette.secondary.main, gap: 4}} style={{fontFamily: "Anta"}}
+                />
               </FormGroup>
               </Box>
             </Box>
@@ -334,17 +347,17 @@ function App() {
               </Grid>
 
               <Grid container spacing={2} sx={{ marginRight: 4, width: 0.4, marginTop: 4, height: "30vh" }}>
-                  <CategoryButton changeMode={handleCategory} updateExplain={updateExplain} 
+                  <CategoryButton chooseCategory={handleCategory} updateExplain={updateExplain} 
                     hideExplain={hideExplain} buttonText={"Anime"}></CategoryButton>
-                  <CategoryButton changeMode={handleCategory} updateExplain={updateExplain} 
+                  <CategoryButton chooseCategory={handleCategory} updateExplain={updateExplain} 
                     hideExplain={hideExplain} buttonText={"Indie"}></CategoryButton>
-                  <CategoryButton changeMode={handleCategory} updateExplain={updateExplain} 
+                  <CategoryButton chooseCategory={handleCategory} updateExplain={updateExplain} 
                     hideExplain={hideExplain} buttonText={"Video Games"}></CategoryButton>
-                  <CategoryButton changeMode={handleCategory} updateExplain={updateExplain} 
+                  <CategoryButton chooseCategory={handleCategory} updateExplain={updateExplain} 
                     hideExplain={hideExplain} buttonText={"Movies"}></CategoryButton>
-                  <CategoryButton changeMode={handleCategory} updateExplain={updateExplain} 
+                  <CategoryButton chooseCategory={handleCategory} updateExplain={updateExplain} 
                     hideExplain={hideExplain} buttonText={"TV Shows"}></CategoryButton>
-                  <CategoryButton changeMode={handleCategory} updateExplain={updateExplain} 
+                  <CategoryButton chooseCategory={handleCategory} updateExplain={updateExplain} 
                     hideExplain={hideExplain} buttonText={"Top 40"}></CategoryButton>
               </Grid>
 
@@ -384,11 +397,12 @@ function App() {
       <ThemeProvider theme={themes[currTheme]}>
         {settingsVisible ? 
           <Box>
-            <Box sx={{ position: "absolute", top: "0", height: "100vh", width: "100vw", backgroundColor: "black", zIndex: "1", opacity: "0.9" }}>
+            <Box onClick={toggleSettingsMenu} sx={{ position: "absolute", top: "0", height: "100vh", width: "100vw", backgroundColor: "black", zIndex: "1", opacity: "0.9" }}>
             </Box>
             <Box sx={{ display: "flex", position: "absolute", top: "calc(50% - 200px)", left: "calc(50% - 200px)", width: "400px", backgroundColor: themes[currTheme].palette.primary.main, border: "2px solid antiquewhite", borderRadius: "20px", padding: "20px", paddingBottom: "60px", zIndex: "2" }}>
             <FormGroup>
-              <FormControlLabel onChange={toggleAutoplay} checked={autoplay} control={<Switch color="default" />} label="Autoplay" />
+              <FormControlLabel onChange={toggleAutoplay} checked={autoplay} control={<Switch color="default" />} label="Autoplay"/>
+              <Slider defaultValue={volume} aria-label="Volume" color="secondary" onChange={adjustVolume}/>
             </FormGroup>
             </Box>
           </Box>
