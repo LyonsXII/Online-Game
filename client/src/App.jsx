@@ -193,7 +193,6 @@ function App() {
       setScore(score + 1);
     } else {
       playLose();
-      setScore(0);
       }
       setShowAnswer(true);
   }
@@ -419,10 +418,13 @@ function App() {
             <Box onClick={toggleSettingsMenu} sx={{ position: "absolute", top: "0", height: "100vh", width: "100vw", backgroundColor: "black", zIndex: "1", opacity: "0.9" }}>
             </Box>
             <Box sx={{ display: "flex", position: "absolute", top: "calc(50% - 200px)", left: "calc(50% - 200px)", width: "400px", backgroundColor: themes[currTheme].palette.primary.main, border: "2px solid antiquewhite", borderRadius: "20px", padding: "20px", paddingBottom: "60px", zIndex: "2" }}>
-            <FormGroup>
-              <FormControlLabel onChange={toggleAutoplay} checked={autoplay} control={<Switch color="default" />} label="Autoplay"/>
-              <Slider defaultValue={volume} aria-label="Volume" color="secondary" onChange={adjustVolume}/>
-            </FormGroup>
+              <FormGroup sx={{width: "100%"}}>
+                <FormControlLabel onChange={toggleAutoplay} checked={autoplay} control={<Switch color="default" />} 
+                label="Autoplay" labelPlacement="start" sx={{width: "20%", color: themes[currTheme].palette.secondary.main, gap: 1, marginLeft: 8}}
+                />
+                <FormControlLabel onChange={adjustVolume} checked={autoplay} control={<Slider defaultValue={volume} aria-label="Volume" color="secondary"/>} label="Volume" labelPlacement="start" sx={{width: "80%", color: themes[currTheme].palette.secondary.main, gap: 4}} style={{fontFamily: "Anta"}}
+                />
+              </FormGroup>
             </Box>
           </Box>
         : null}
