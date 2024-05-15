@@ -8,6 +8,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import Slider from '@mui/material/Slider';
+import Fade from '@mui/material/Fade';
 
 import HomeButton from "./HomeButton";
 import ToggleTheme from "./ToggleTheme";
@@ -26,10 +27,11 @@ import tutorials from './text/tutorial.json';
 function App() {
   const [hidden, setHidden] = useState(true);
   const [intro, setIntro] = useState(true);
+  const [gameOver, setGameOver] = useState(false);
   const [difficulty, setDifficulty] = useState("Easy");
   const [category, setCategory] = useState("Anime");
   const [mode, setMode] = useState("Challenge");
-
+  
   const [explainHidden, setExplainHidden] = useState(true);
   const [explainText, setExplainText] = useState("");
   const [settingsVisible, setSettingsVisible] = useState(false);
@@ -50,12 +52,10 @@ function App() {
 
   const [songFilePath, setSongFilePath] = useState("");
   const [pipelineAudioFile, setPipelineAudioFile] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false); // Not using currently, part of audio play button
   const audioRef = React.useRef(null);
 
   const [currTheme, setCurrTheme] = useState(0);
-
-
 
   // Fetch number of possible questions for category from database
   async function getNumQuestions() {
@@ -133,12 +133,14 @@ function App() {
     }
    }, [pipelineAudioFile]);
 
+  // State functionality functions
   function startGame() {
     clickNoise();
     getNumQuestions();
     fetchData();
     setIntro(false);
     setShowAnswer(false);
+    setHidden(true);
     setScore(0);
     setExcluded([]);
   }
@@ -155,6 +157,7 @@ function App() {
     clickNoise();
     setIntro(true);
     setHidden(true);
+    setGameOver(false);
   }
 
   function handleCategory(event) {
@@ -191,10 +194,13 @@ function App() {
     if (correct) {
       playWin();
       setScore(score + 1);
-    } else {
+    } else  {
       playLose();
+      if (mode === "Sudden Death") {
+        setGameOver(true);
       }
-      setShowAnswer(true);
+    } 
+    setShowAnswer(true);
   }
 
   function toggleAudioPlayback() {
@@ -314,6 +320,10 @@ function App() {
     }
   })];
 
+  const settingBoxesTop = { position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2, display: "flex", flexDirection: "column", gap: 1, zIndex: "2" }
+  const settingBoxesBottom = { position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2, display: "flex", flexDirection: "column", gap: 1 }
+
+  // Page rendering
   if (intro) {
     return (
         <ThemeProvider theme={themes[currTheme]}>
@@ -352,7 +362,7 @@ function App() {
                   </Typography>
               </Grid>
 
-              <Grid container spacing={2} sx={{ marginRight: 4, width: 0.4, marginTop: 4, height: "30vh" }}>
+              <Grid container spacing={2} sx={{ marginRight: 16, width: 0.4, marginTop: 4, height: "30vh" }}>
                   <CategoryButton chooseCategory={handleCategory} updateExplain={updateExplain} 
                     hideExplain={hideExplain} buttonText={"Anime"}></CategoryButton>
                   <CategoryButton chooseCategory={handleCategory} updateExplain={updateExplain} 
@@ -370,30 +380,30 @@ function App() {
               <Grid container spacing={2} sx={{ width: 0.4, marginTop: 4, height: "30vh"}}>
               <Grid item xs={6}>
                 <Button onClick={handleDifficulty} onMouseOver={updateExplain} 
-                    onMouseLeave={() => {setExplainHidden(true);}} value="Easy" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h3", fontFamily: "Anta" }}>
+                    onMouseLeave={() => {setExplainHidden(true);}} value="Easy" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>
                       Easy
                   </Button>
                 </Grid>
                 <Grid item xs={6}>
                   <Button onClick={handleDifficulty}  onMouseOver={updateExplain} 
-                    onMouseLeave={() => {setExplainHidden(true);}} value="Hard" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%",padding: 0, typography: "h3", fontFamily: "Anta" }}>
+                    onMouseLeave={() => {setExplainHidden(true);}} value="Hard" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%",padding: 0, typography: "h4", fontFamily: "Anta" }}>
                       Hard
                   </Button>
                 </Grid>
                 <Grid item xs={6}>
                   <Button onClick={handleMode} onMouseOver={updateExplain} 
-                    onMouseLeave={() => {setExplainHidden(true);}} value="Challenge" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h3", fontFamily: "Anta" }}>
+                    onMouseLeave={() => {setExplainHidden(true);}} value="Challenge" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h4", fontFamily: "Anta" }}>
                       Challenge
                   </Button>
                 </Grid>
                 <Grid item xs={6}>
                   <Button onClick={handleMode}  onMouseOver={updateExplain} 
-                    onMouseLeave={() => {setExplainHidden(true);}} value="Sudden Death" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%",padding: 0, typography: "h3", fontFamily: "Anta" }}>
+                    onMouseLeave={() => {setExplainHidden(true);}} value="Sudden Death" variant="contained" sx={{ width: 1, boxShadow: 10, border: "2px solid antiquewhite", height: "100%",padding: 0, typography: "h4", fontFamily: "Anta" }}>
                       Sudden Death
                   </Button>
                 </Grid>
                 <Grid item xs={12} sx={{display: "flex", justifyContent: "center"}}>
-                  <Button onClick={startGame} variant="contained" sx={{ width: 0.8, height: 90, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h3", fontFamily: "Anta" }}>
+                  <Button onClick={startGame} variant="contained" sx={{ width: 0.6, height: 90, boxShadow: 10, border: "2px solid antiquewhite", height: "100%", padding: 0, typography: "h3", fontFamily: "Anta" }}>
                       Start
                   </Button>
                 </Grid>
@@ -429,7 +439,23 @@ function App() {
           </Box>
         : null}
 
-        <Box sx={{ position: "absolute", top: 0, right: 0, marginTop: 2, marginRight: 2, display: "flex", flexDirection: "column", gap: 1, zIndex: "2" }}>
+        {gameOver ? 
+          <Fade in={gameOver} timeout={3000}>
+            <Box onClick={resetGame} sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexWrap: "wrap", position: "absolute", top: "0", height: "100vh", width: "100vw", backgroundColor: "black", zIndex: "1", opacity: 1 }}>
+                <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column",width: "100%"}}>
+                  <Typography variant="poster" color={themes[currTheme].palette.secondary.main} 
+                        sx={{ textShadow: "4px 4px #000000", fontFamily: "Anta", zIndex: "2" }}>
+                          Game Over!
+                  </Typography>
+                  <Typography variant="h2" color={themes[currTheme].palette.secondary.main}>{category}</Typography>
+                  <Typography variant="h3" color={themes[currTheme].palette.secondary.main}>{difficulty}</Typography>
+                  <Typography variant="h3" color={themes[currTheme].palette.secondary.main} sx={{marginTop: 4}}>Score: {score}/{numQuestions - 3}</Typography>
+                </Box>
+            </Box>
+          </Fade>
+          : null}
+
+        <Box sx={gameOver ? settingBoxesBottom : settingBoxesTop}>
           <HomeButton resetGame={resetGame}/>
           <ToggleTheme toggleTheme={toggleTheme}/>
           <SettingsButton toggleSettingsMenu={toggleSettingsMenu}></SettingsButton>
@@ -437,7 +463,7 @@ function App() {
 
         <Box sx={{ position: "absolute", top: 0, left: 0, marginTop: 2, marginLeft: 2 }}>
             <Typography variant="h2" color={themes[currTheme].palette.secondary.main} sx={{ textShadow: "4px 4px #000000" }}>Score: {score}/{numQuestions - 3}</Typography>
-        </Box>
+        </Box> 
 
         <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: 0.7, minHeight: "98vh", marginTop: 2, '&.MuiContainer-root': {maxWidth: 'unset'} }}>
           <Grid container spacing={2} sx={{ width: 1, justifyContent: "center", alignItems: "center"}}>
